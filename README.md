@@ -6,7 +6,7 @@ A fantastic bot for communications
 
 
 
-#Setup:
+# Setup:
 
 Run the following (ideally in a venv):
 ```
