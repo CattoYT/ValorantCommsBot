@@ -2,53 +2,64 @@ import threading
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
-import speaker
+import keyboard
+import os
+import random
+import time
 
 
+from utils import get_file_duration, find_device_id
+
+play_lock = threading.Condition()
 def play_audio(file_path, volume):
-    # Read the audio file
-    data, samplerate = sf.read(file_path)
-
-    # Convert audio data to the expected data type
-    data = data.astype(np.float32)
-
-    data *= volume
 
 
+    play_lock.acquire()
+    data, fs = sf.read(file_path, dtype='float32')
 
-    # Create a new Stream object
-    stream = sd.OutputStream(device=None, channels=1, callback=None, samplerate=samplerate)
+    keyboard.press('v')
+    sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
+    sd.wait()
+    time.sleep(0.1)
+    keyboard.release('v')
 
-    # Start the stream
-    stream.start()
+    play_lock.release()
 
-    # Write the audio data to the stream
-    stream.write(data)
 
-    # Stop and close the stream
-    stream.stop()
-    stream.close()
 
 def sayVoice(file_path):
     # Create a new thread to play the audio
-    audio_thread = threading.Thread(target=play_audio, args=(file_path, 0.5))
+
+    audio_thread = threading.Thread(target=play_audio, args=(file_path, 0.4))
     audio_thread.start()
 
-def getVoiceLine(scenario, va):
-    match va:
-        case 'keqing':
+def getRandomVoiceLine(scenario, va):
+    if va == 'mio':
+        getRandomFile(scenario, va)
+        '''
+        match scenario:
+            case 'encouragement':
+                files = os.listdir('voices/mio/encouragement')
+                if files:
+                    random_file = random.choice(files)
+                    file_path = os.path.join('voices/mio/encouragement', random_file)
+                    return file_path
+            case 'death':
+                
+                files = os.listdir('voices/mio/death')
+                if files:
+                    random_file = random.choice(files)
+                    file_path = os.path.join('voices/mio/death', random_file)
+                    return file_path
+                
+                
+            case 'teammateDeath':
+        '''
 
-            match scenario:
-                case (1):
-                    return 'voices/keqing/Keqing-low-hp.wav'
-
-
-        case 'mio':
-            match scenario:
-                case (1):
-                    return 'voices/Keqing-low-hp.wav'
-
-
-
-sd.query_devices()
-# Call the function to play the audio into the microphone in a separate thread
+def getRandomFile(scenario, va):
+    files = os.listdir(f'voices/{va}/{scenario}')
+    if files:
+        random_file = random.choice(files)
+        file_path = os.path.join(f'voices/{va}/{scenario}/', random_file)
+        print(scenario, "|", file_path)
+        return file_path

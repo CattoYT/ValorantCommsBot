@@ -4,3 +4,4 @@ PyAutoGUI==0.9.54
 pytesseract==0.3.10
 sounddevice==0.4.6
 soundfile==0.12.1
+keyboard==0.13.5

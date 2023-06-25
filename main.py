@@ -1,69 +1,63 @@
-import pyautogui
-import pytesseract
-from PIL import Image, ImageFilter
+import random
+import threading
+
 import time
-import numpy as np
 import speaker as spk
-import re
+import detectors
 
-
-def capture_screenshot(x, y, width, height):
-    screenshot = pyautogui.screenshot()
-    region = screenshot.crop((x, y, x + width, y + height))
-    return region
-
-
-def read_text(image):
-    text = pytesseract.image_to_string(image)
-    return text
-
-
-def getPlayerHealth():
-    # health location
-    region_x = 574  # X-coordinate of the top-left corner of the region
-    region_y = 1003  # Y-coordinate of the top-left corner of the region
-    region_width = 77  # Width of the region
-    region_height = 46  # Height of the region
-
-    screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
-
-    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.ANTIALIAS)
-
-    text = read_text(anti_alias_image)
-
-    text = re.sub(r'\D', '', text)
-    return text
-
-
-def getPlayerShield():
-    # Shield location
-    region_x = 545  # X-coordinate of the top-left corner of the region
-    region_y = 1018  # Y-coordinate of the top-left corner of the region
-    region_width = 19  # Width of the region
-    region_height = 19  # Height of the region
-
-    screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
-
-    # Apply anti-aliasing using the `ANTIALIAS` filter
-    anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.ANTIALIAS)
-
-    text = read_text(anti_alias_image)
-
-    return text
+from detectors import getAlive, getPlayerHealth, getPlayerShield
 
 
 def main():
+    global healthIsLow
+    global isAlive
+    global isTeammateDead
+
+    healthIsLow = False
+    isAlive = True
+    isTeammateDead = False
+
+
     while True:
-        time.sleep(3)
+        time.sleep(5)
+        print('\n')
+        isAlive = getAlive()
+        print('Alive: ' + str(isAlive))
+
+        if isAlive == False:
+            print('dead')
+            spk.sayVoice(spk.getRandomFile('death', 'mio'))
+        else:
+            isAlive == True
+
+
         health = getPlayerHealth()
         shield = getPlayerShield()
 
-        if health:
-            print("Health: " + str(health))
-            if int(health) < 70:
-                print("Attempting to speak...")
-                spk.sayVoice(spk.getVoiceLine(1, 'keqing'))
+        try:
+            int(health)
+        except ValueError:
+            health = None
+        try:
+            int(shield)
+        except ValueError:
+            shield = None
 
+        if health and isAlive:
+            print("Health: " + str(health))
+
+            if int(health) > 70:
+                healthIsLow = False
+                isAlive = True
+                if healthIsLow == True:
+                    healthIsLow = False
+                    spk.sayVoice(spk.getRandomFile('health-recovered', 'mio'))
+            if int(health) <= 70 and healthIsLow == False:
+                healthIsLow = True
+                print("Attempting to speak...")
+
+
+                spk.sayVoice(spk.getRandomFile('low-hp', 'mio'))
         else:
             print("Failed to get health!")
 
@@ -72,13 +66,39 @@ def main():
         else:
             print("Failed to get shield!")
 
+        # TODO: put this in a new thread
+        #if random.randint(1, 10) > 8:
+        #    spk.sayVoice(spk.getRandomVoiceLine('encouragement', 'mio'))
+
+
+def monitorKills():
+
+    while True:
+        print('\n')
+        time.sleep(5)
+        isTeammateDead = detectors.getDeaths()
+        print('Dead Teammates: ' + str(isTeammateDead))
+
+
+        killcount = detectors.getKills()
+        print('killcount = ' + str(killcount))
+
+        for i in range(killcount):
+            if random.randint(1, 10) > 0:
+                spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
+            else:
+                print('failed rng')
+        killcount = 0
+
+
 
 if __name__ == '__main__':
     # TODO: Fix this bullshit + make detection for null or >50 shield
-    # TODO: add detection for death
     # TODO: do the funny with some video on this cuz theres a market for it
-    # TODO: add mio's voice
-    # TODO: optimize the voicelines code by probably returning
-    #  a certain string and only changing the actual directory (that made no sense)
+    # TODO: STOP MAKING IT PLAY WHEN IM IN CHARACTER SELECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    main()
+
+    threading.Thread(target=main).start()
+    print('Started main bot!')
+    threading.Thread(target=monitorKills).start()
+    print('Started Teammate detector!')
