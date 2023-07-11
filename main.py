@@ -16,7 +16,7 @@ def main():
     healthIsLow = False
     isAlive = True
     isTeammateDead = False
-
+    alreadyDead = False
 
     while True:
         time.sleep(5)
@@ -24,11 +24,13 @@ def main():
         isAlive = getAlive()
         print('Alive: ' + str(isAlive))
 
-        if isAlive == False:
+
+        if isAlive == False and alreadyDead == False:
             print('dead')
+            alreadyDead = True
             spk.sayVoice(spk.getRandomFile('death', 'mio'))
-        else:
-            isAlive == True
+        elif isAlive == True and alreadyDead == True:
+            alreadyDead = False
 
 
         health = getPlayerHealth()
@@ -74,7 +76,6 @@ def main():
 def monitorKills():
 
     while True:
-        print('\n')
         time.sleep(5)
         isTeammateDead = detectors.getDeaths()
         print('Dead Teammates: ' + str(isTeammateDead))
@@ -87,7 +88,7 @@ def monitorKills():
             if random.randint(1, 10) > 0:
                 spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
             else:
-                print('failed rng')
+                print('monitorKills - failed rng')
         killcount = 0
 
 

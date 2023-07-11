@@ -25,8 +25,6 @@ def play_audio(file_path, volume):
 
     play_lock.release()
 
-
-
 def sayVoice(file_path):
     # Create a new thread to play the audio
 
