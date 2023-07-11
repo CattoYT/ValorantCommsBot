@@ -1,6 +1,7 @@
 # ValorantCommsBot
 
-A fantastic bot for communications
+A valorant bot that can be used to automate communications using voice clips from different games.
+This was written because I was bored + inspiration from SociallyIneptWeeb
 
 
 
