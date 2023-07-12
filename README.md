@@ -51,5 +51,5 @@ known as Digital Millennium Copyright Act (“DMCA”).
 
 
 If any audio posted here are in violation of copyright law, please contact 
-us and we will gladly remove the offending images immediately upon receipt 
+us and we will gladly remove the offending clips immediately upon receipt 
 of valid proof of copyright infringement.
