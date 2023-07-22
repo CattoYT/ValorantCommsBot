@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ```
 
 
-# Documentation
+# Reminders
 
 Teammate kills are detected by searching for the green pixel at certain coords
 
