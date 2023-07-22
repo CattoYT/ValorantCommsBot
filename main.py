@@ -86,20 +86,38 @@ def monitorKills():
 
         for i in range(killcount):
             if random.randint(1, 10) > 0:
+                print('monitorKills - succeeded rng (guaranteed rn)')
                 spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
             else:
                 print('monitorKills - failed rng')
         killcount = 0
+        if isTeammateDead:
+            spk.sayVoice(spk.getRandomFile('teammate-death', 'mio'))
+            print("Shit teammates")
 
 
 
 if __name__ == '__main__':
     # TODO: Fix this bullshit + make detection for null or >50 shield
     # TODO: do the funny with some video on this cuz theres a market for it
-    # TODO: STOP MAKING IT PLAY WHEN IM IN CHARACTER SELECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # TODO: make it use only one screenshot for all checks
+    # TODO:
+
 
 
     threading.Thread(target=main).start()
     print('Started main bot!')
     threading.Thread(target=monitorKills).start()
     print('Started Teammate detector!')
+
+    #CHECKLIST:
+
+    # Teammate death detection - sometimes doesnt work if the killer name is too short
+    # My death detection - Fine
+    # Health - buggy, cant do shit about it
+    # Shield - same
+    # Alive status - perfect <3
+    # my kills - seem fine?
+    # round detector - NOT IMPLEMENTED
+
+

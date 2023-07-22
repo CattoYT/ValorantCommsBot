@@ -32,7 +32,7 @@ def getPlayerHealth():
     region_height = 46  # Height of the region
 
     screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
-
+    screenshot.save("debugging-images/healthtest.png")
     anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.ANTIALIAS)
 
     text = read_text(anti_alias_image)
@@ -49,7 +49,7 @@ def getPlayerShield():
     region_height = 19  # Height of the region
 
     screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
-
+    screenshot.save("debugging-images/healthtest.png")
     # Apply anti-aliasing using the `ANTIALIAS` filter
     anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.ANTIALIAS)
 
@@ -57,7 +57,7 @@ def getPlayerShield():
 
     return text
 
-#scans coords
+#scans coords with color
 def getDeaths():
     region_x = 1764    # X-coordinate of the top-left corner of the region
     killfeedYCoords = [96, 135, 174, 213, 252, 291]   #
@@ -78,6 +78,8 @@ def getDeaths():
 
         # Check if any pixels matching the target color are found
         if np.any(mask):
+            #print coords of the pixel
+            print(region_x, ycoord)
             return True
         else:
             return False
@@ -91,7 +93,7 @@ def getKills():
     region_width = 537 # Width of the region
     region_height = 1080 # Height of the region
 
-    matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', confidence=0.9, region=(region_x, region_y, region_width, region_height))
+    matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', confidence=0.9, region=(region_x, region_y, region_width, region_height))
     killcount = 0
     if matches:
         for i in matches:
@@ -109,3 +111,10 @@ def getAlive():
         return False
     else:
         return True
+
+    #oh nyo
+def roundDetector():
+    print('checking for round loss')
+    if pyautogui.locateOnScreen('test.png', confidence=0.9):
+        return 'loss'
+    
