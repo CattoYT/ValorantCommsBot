@@ -7,11 +7,12 @@ import detectors
 
 from detectors import getAlive, getPlayerHealth, getPlayerShield
 
-
+global frame
 def main():
     global healthIsLow
     global isAlive
     global isTeammateDead
+
 
     healthIsLow = False
     isAlive = True
@@ -20,6 +21,7 @@ def main():
 
     while True:
         time.sleep(5)
+        frame = detectors.capture_screenshot()
         print('\n')
         isAlive = getAlive()
         print('Alive: ' + str(isAlive))
@@ -33,8 +35,8 @@ def main():
             alreadyDead = False
 
 
-        health = getPlayerHealth()
-        shield = getPlayerShield()
+        health = getPlayerHealth(frame)
+        shield = getPlayerShield(frame)
 
         try:
             int(health)
@@ -49,11 +51,12 @@ def main():
             print("Health: " + str(health))
 
             if int(health) > 70:
-                healthIsLow = False
-                isAlive = True
                 if healthIsLow == True:
                     healthIsLow = False
                     spk.sayVoice(spk.getRandomFile('health-recovered', 'mio'))
+                    healthIsLow = False
+
+        if health:
             if int(health) <= 70 and healthIsLow == False:
                 healthIsLow = True
                 print("Attempting to speak...")
@@ -74,10 +77,11 @@ def main():
 
 
 def monitorKills():
-
+    global frame
     while True:
         time.sleep(5)
-        isTeammateDead = detectors.getDeaths()
+        frame = detectors.capture_screenshot()
+        isTeammateDead = detectors.getDeaths(frame)
         print('Dead Teammates: ' + str(isTeammateDead))
 
 
@@ -91,7 +95,7 @@ def monitorKills():
             else:
                 print('monitorKills - failed rng')
         killcount = 0
-        if isTeammateDead:
+        if isTeammateDead and not isAlive:
             spk.sayVoice(spk.getRandomFile('teammate-death', 'mio'))
             print("Shit teammates")
 
@@ -121,3 +125,6 @@ if __name__ == '__main__':
     # round detector - NOT IMPLEMENTED
 
 
+
+# BUGS
+# - Plays loww

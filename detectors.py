@@ -9,13 +9,10 @@ from pytesseract import pytesseract
 
 import utils
 
-
-
-def capture_screenshot(x, y, width, height):
-
-    screenshot = pyautogui.screenshot()
+def capture_screenshot():
+    region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
     # screenshot = Image.open('testimage.png')
-    region = screenshot.crop((x, y, x + width, y + height))
+
     return region
 
 
@@ -24,14 +21,16 @@ def read_text(image):
     return text
 
 
-def getPlayerHealth():
+def getPlayerHealth(screenshot):
     # health location
     region_x = 574  # X-coordinate of the top-left corner of the region
     region_y = 1003  # Y-coordinate of the top-left corner of the region
     region_width = 77  # Width of the region
     region_height = 46  # Height of the region
 
-    screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
+    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
+
+
     screenshot.save("debugging-images/healthtest.png")
     anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.ANTIALIAS)
 
@@ -41,14 +40,15 @@ def getPlayerHealth():
     return text
 
 
-def getPlayerShield():
+def getPlayerShield(screenshot):
     # Shield location
     region_x = 545  # X-coordinate of the top-left corner of the region
     region_y = 1018  # Y-coordinate of the top-left corner of the region
     region_width = 19  # Width of the region
     region_height = 19  # Height of the region
 
-    screenshot = capture_screenshot(region_x, region_y, region_width, region_height)
+    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
+
     screenshot.save("debugging-images/healthtest.png")
     # Apply anti-aliasing using the `ANTIALIAS` filter
     anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.ANTIALIAS)
@@ -57,8 +57,8 @@ def getPlayerShield():
 
     return text
 
-#scans coords with color
-def getDeaths():
+#scans coords with color (checks if any teammates are dead)
+def getDeaths(screenshot):
     region_x = 1764    # X-coordinate of the top-left corner of the region
     killfeedYCoords = [96, 135, 174, 213, 252, 291]   #
     region_width = 72   # Width of the region
@@ -66,7 +66,9 @@ def getDeaths():
     target_color = (102, 195, 169)  # RGB value of the target color
 
     for ycoord in killfeedYCoords:
-        killfeed = capture_screenshot(region_x, ycoord, region_width, region_height)
+        killfeed = screenshot.crop((region_x, ycoord, region_x + region_width, ycoord + region_height))
+
+
         killfeed.save("debugging-images/killfeedtest.png")
         image = cv2.imread("debugging-images/killfeedtest.png")
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -78,8 +80,6 @@ def getDeaths():
 
         # Check if any pixels matching the target color are found
         if np.any(mask):
-            #print coords of the pixel
-            print(region_x, ycoord)
             return True
         else:
             return False
@@ -107,14 +107,19 @@ def getKills():
 
 def getAlive():
     if pyautogui.locateOnScreen('COMBAT_REPORT2.png', confidence=0.9):
-
         return False
     else:
         return True
 
-    #oh nyo
+
+#oh nyo still being added
 def roundDetector():
     print('checking for round loss')
     if pyautogui.locateOnScreen('test.png', confidence=0.9):
         return 'loss'
-    
+
+def getWinLoss():
+    if pyautogui.locateOnScreen('debugging-images/defeat.png', confidence=0.8):
+        return False
+    if pyautogui.locateOnScreen('debugging-images/victory.png', confidence=0.8):
+        return True
