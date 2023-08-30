@@ -104,8 +104,8 @@ def monitorKills():
 if __name__ == '__main__':
     # TODO: Fix this bullshit + make detection for null or >50 shield
     # TODO: do the funny with some video on this cuz theres a market for it
-    # TODO: make it use only one screenshot for all checks
-    # TODO:
+    # TODO: Implement the yolo detection
+    # TODO: once 3.12 is made, add the TRUE MULTITHREAD EXPERIENCE
 
 
 
@@ -123,6 +123,7 @@ if __name__ == '__main__':
     # Alive status - perfect <3
     # my kills - seem fine?
     # round detector - NOT IMPLEMENTED
+    # Enemy Detector - semi implemented
 
 
 

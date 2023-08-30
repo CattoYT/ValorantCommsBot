@@ -106,7 +106,7 @@ def getKills():
 
 
 def getAlive():
-    if pyautogui.locateOnScreen('COMBAT_REPORT2.png', confidence=0.9):
+    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.9):
         return False
     else:
         return True
@@ -115,7 +115,7 @@ def getAlive():
 #oh nyo still being added
 def roundDetector():
     print('checking for round loss')
-    if pyautogui.locateOnScreen('test.png', confidence=0.9):
+    if pyautogui.locateOnScreen('debugging-images/roundloss.png', confidence=0.9):
         return 'loss'
 
 def getWinLoss():

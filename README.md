@@ -24,11 +24,24 @@ My kills are located by searching for killname.png in the top right corner of th
 My alive status is checked by looking for the combat report (NEEDS CHANGE)
 
 
+## Acknowledgements
+
+- [YOLOv5](https://github.com/ultralytics/yolov5) by Ultralytics
+  - License: AGPL v3.0
+
+- [PyTorch](https://pytorch.org/)
+  - License: BSD-3-Clause
+
+- [OpenCV](https://opencv.org/)
+  - License: Apache License 2.0
+  - 
+- [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
+  - License: Apache License 2.0
+
+# Disclaimer + Legal Stuff
 
 
-# Disclaimer
-
-All voice clips copyright to their respective owner(s). This project does not claim 
+*All voice clips copyright to their respective owner(s). This project does not claim 
 ownership of any of the voice clips used in this project unless stated otherwise. 
 This project does not knowingly intend or attempt to offend or violate any 
 copyright or intellectual property rights of any entity. Some audio used on this 
