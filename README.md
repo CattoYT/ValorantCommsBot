@@ -9,11 +9,7 @@ This was written because I was bored + inspiration from SociallyIneptWeeb
 
 # Setup:
 
-Run the following (ideally in a venv):
-```
-pip install -r requirements.txt
-```
-
+Install git and run setup.py
 
 # Reminders
 
