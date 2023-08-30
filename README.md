@@ -33,6 +33,8 @@ My alive status is checked by looking for the combat report (NEEDS CHANGE)
   - 
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
+ 
+- [YoloV5 Valorant Model](https://github.com/Leaf48/YOLO-Models-For-Valorant) by Leaf48
 
 # Disclaimer + Legal Stuff
 
