@@ -1,5 +1,6 @@
 import soundfile as sf
 import sounddevice as sd
+import requests
 import torch
 
 
@@ -29,3 +30,8 @@ def whatDevice():
     return torch.cuda.get_device_name(0)
 
 print(isCudaAvailable())
+
+
+def testColab():
+    url = input("Give url: ")
+    r = requests.post(f'{url}')

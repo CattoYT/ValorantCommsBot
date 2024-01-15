@@ -7,28 +7,29 @@ import torch
 from PIL import Image, ImageGrab
 import numpy as np
 
-model = torch.hub.load(R'yolov5-master', 'custom', path=R'valorant.pt', source='local', force_reload=True)
-
-# Create OpenCV window if it doesn't exist
-
-
+model = torch.hub.load(R'yolov5', 'custom', path=R'valorant.pt', source='local', force_reload=True)
 
 def get_active_window_title():
     return win32gui.GetWindowText(win32gui.GetForegroundWindow())
 
 def findEnemy():
     global enemyCount
+    enemyCount = 0
     starttime = time.time()
     active_window_title = get_active_window_title()
+
+    time.sleep(0.1)
+
+    img = ImageGrab.grab()
     if "VALORANT" in active_window_title:
-        time.sleep(0.1)
-        img = ImageGrab.grab()
+
 
         # Inference
         results = model(img)
         model.conf = 0.6
-        foundshit = False
-        # Convert PIL image to OpenCV format for drawing
+    foundshit = False
+
+    try:
         img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
 
@@ -40,11 +41,11 @@ def findEnemy():
 
 
             if conf > model.conf:
-                # Draw bounding box
+
                 x_min, y_min, x_max, y_max = map(int, bbox)
                 cv2.rectangle(img_cv, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
-                # Draw label
+
                 label_text = f"{model.names[int(label)]} {conf:.2f}"
                 cv2.putText(img_cv, label_text, (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 foundshit = True
@@ -52,7 +53,7 @@ def findEnemy():
                 print(enemyCount)
 
 
-        # Show the image with bounding boxes
+
         cv2.imshow("Detection", img_cv)
         cv2.waitKey(1)
 
@@ -60,14 +61,16 @@ def findEnemy():
             return True
         else:
             return False
+    except UnboundLocalError:
+        print("Not tabbed into VALORANT!")
+        return False
 
 
 def initializePlayerDetector():
-    # Create OpenCV window if it doesn't exist
+
     if not cv2.getWindowProperty("Detection", cv2.WND_PROP_VISIBLE):
         cv2.namedWindow("Detection", cv2.WINDOW_NORMAL)
 
-    # Set the desired window size (width, height)
     window_width = 960
     window_height = 540
     cv2.resizeWindow("Detection", window_width, window_height)

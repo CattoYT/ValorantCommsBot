@@ -63,7 +63,6 @@ def getDeaths(screenshot):
     killfeedYCoords = [96, 135, 174, 213, 252, 291]   #
     region_width = 72   # Width of the region
     region_height = 34   # Height of the region
-    target_color = (102, 195, 169)  # RGB value of the target color
 
     for ycoord in killfeedYCoords:
         killfeed = screenshot.crop((region_x, ycoord, region_x + region_width, ycoord + region_height))
@@ -73,7 +72,7 @@ def getDeaths(screenshot):
         image = cv2.imread("debugging-images/killfeedtest.png")
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        target_color = utils.hex_to_rgb('#66c3a9')
+        target_color = utils.hex_to_rgb('#66c3a9') # 102, 195, 169
 
         # Create a mask of pixels matching the target color
         mask = cv2.inRange(image_rgb, target_color, target_color)

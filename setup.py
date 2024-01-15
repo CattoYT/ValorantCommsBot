@@ -2,29 +2,25 @@ import os
 import subprocess
 import sys
 
-# Someone test this i dont want to lmao
-def is_running_in_venv():
-
-    python_executable = sys.executable
-    venv_executable = os.path.join(sys.prefix, 'bin', 'python')
-
-    return python_executable == venv_executable
-
-if not is_running_in_venv():
-    aa = input("You are not in a virtual environment. Are you sure you want to continue? (y/n).")
-    if aa == "y":
-        pass
-    else:
-        exit()
-
+yes = input("Do you want to install all the packages? (y/n): ")
+if yes == "y":
+    pass
+else:
+    sys.exit()
 
 # Run pip install command
-package_name = ["numpy", "cv2", "pyautogui", "PIL", "pytesseract", "soundfile", "sounddevice", "win32gui"]
-for i in package_name:
-    subprocess.run(["pip", "install", package_name])
-subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
 
 
+subprocess.run(["pip", "install", "-r", "requirements.txt"])
+
+
+'''
+
+-i https://download.pytorch.org/whl/nightly/cu121
+torch==2.3.0.dev20240110+cu121
+torchvision==0.18.0.dev20240110+cu121
+
+'''
 try:
     import torch
 except ImportError:
@@ -32,4 +28,4 @@ except ImportError:
     if thing == "cpu":
         subprocess.run(["pip3", "install", "torch", "torchvision", "torchaudio"])
     elif thing == "cuda":
-        subprocess.run(["pip3", "install", "torch", "torchvision", "torchaudio", "--index-url", "https://download.pytorch.org/whl/cu118"])
+        subprocess.run(["pip3", "install", "torch", "torchvision", "torchaudio", "--index-url", "https://download.pytorch.org/whl/nightly/cu121"])

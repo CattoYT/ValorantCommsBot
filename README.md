@@ -9,7 +9,11 @@ This was written because I was bored + inspiration from SociallyIneptWeeb
 
 # Setup:
 
-Install git and run setup.py
+Run the following (ideally in a venv):
+```
+pip install -r requirements.txt
+```
+
 
 # Reminders
 
@@ -33,8 +37,6 @@ My alive status is checked by looking for the combat report (NEEDS CHANGE)
   - 
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
- 
-- [YoloV5 Valorant Model](https://github.com/Leaf48/YOLO-Models-For-Valorant) by Leaf48
 
 # Disclaimer + Legal Stuff
 
