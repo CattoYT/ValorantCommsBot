@@ -32,7 +32,7 @@ def getPlayerHealth(screenshot):
 
 
     screenshot.save("debugging-images/healthtest.png")
-    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.ANTIALIAS)
+    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.LANCZOS)
 
     text = read_text(anti_alias_image)
 
@@ -51,7 +51,7 @@ def getPlayerShield(screenshot):
 
     screenshot.save("debugging-images/healthtest.png")
     # Apply anti-aliasing using the `ANTIALIAS` filter
-    anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.ANTIALIAS)
+    anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.LANCZOS)
 
     text = read_text(anti_alias_image)
 

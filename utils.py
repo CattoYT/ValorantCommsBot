@@ -29,7 +29,6 @@ def isCudaAvailable():
 def whatDevice():
     return torch.cuda.get_device_name(0)
 
-print(isCudaAvailable())
 
 
 def testColab():

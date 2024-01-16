@@ -103,9 +103,9 @@ def monitorKills():
 
 if __name__ == '__main__':
     # TODO: Fix this bullshit + make detection for null or >50 shield
-    # TODO: do the funny with some video on this cuz theres a market for it
-    # TODO: Implement the yolo detection
-    # TODO: once 3.12 is made, add the TRUE MULTITHREAD EXPERIENCE
+    # TODO: Rewrite this entire fuckin file its so bad
+    # TODO: maybe integrate rvc or voice synthesis using some textgen + voice gen figure it out later lol
+
 
 
 
