@@ -1,5 +1,4 @@
 
-
 import time
 
 import detectors
@@ -14,7 +13,7 @@ global isTeammateDead
 
 
 while True:
-    
+
     frame = detectors.capture_screenshot()
     print('\n')
     health = getPlayerHealth(frame)
@@ -35,4 +34,4 @@ while True:
         print("HEALTH LOW")
         spk.sayVoice(spk.getRandomFile('health-low', 'mio'))
         continue
-
+    time.sleep(5)
