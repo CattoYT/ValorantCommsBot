@@ -4,33 +4,46 @@ import time
 import detectors
 
 from detectors import getPlayerHealth, getPlayerShield
-import speaker as spk
 
+from HealthManager import healthManager
+
+# il eventually fix this cuz i really dont want to have a billion global vars xd
 global frame
-global healthIsLow
+global isAlreadyLow
 global isAlive
 global isTeammateDead
+global isAlreadyDead
 
 
-while True:
 
-    frame = detectors.capture_screenshot()
-    print('\n')
-    health = getPlayerHealth(frame)
-    shield = getPlayerShield(frame)
-    print("Health: " + str(health))
-    print("Shield: " + str(shield))
-    print("")
-    time.sleep(5)
 
-    isAlive = detectors.getAlive()
-    if not isAlive:
-        print("DEAD")
-        spk.sayVoice(spk.getRandomFile('death', 'mio'))
-        continue
-    print("ALIVE")
-    if health < 50:
-        print("HEALTH LOW")
-        spk.sayVoice(spk.getRandomFile('health-low', 'mio'))
-        continue
-    time.sleep(5)
+
+
+
+def main():
+
+    HealthMgr = healthManager()
+
+    while True:
+
+        frame = detectors.capture_screenshot()
+
+        HealthMgr.updateHP(getPlayerHealth(frame) or None)
+        HealthMgr.updateShield(getPlayerShield(frame) or None)
+
+        print("Health: " + str(HealthMgr.health))
+        print("Shield: " + str(HealthMgr.shield))
+
+        isAlive = detectors.getAlive()
+        if HealthMgr.health and not isAlive:
+            isAlive = True # override because holy shit its not consistent
+
+        HealthMgr.updateAlive(isAlive)
+
+        print("\n")
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    main()
+

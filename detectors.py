@@ -17,7 +17,7 @@ def capture_screenshot():
 
 
 def read_text(image):
-    text = pytesseract.image_to_string(image)
+    text = pytesseract.image_to_string(image) # find a way to improve confidence or just swap over to something else lol
     return text
 
 
@@ -105,7 +105,7 @@ def getKills():
 
 
 def getAlive():
-    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.9):
+    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.7):
         return False
     else:
         return True

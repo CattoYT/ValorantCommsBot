@@ -15,7 +15,6 @@ def get_active_window_title():
 def findEnemy():
     global enemyCount
     enemyCount = 0
-    starttime = time.time()
     active_window_title = get_active_window_title()
 
     time.sleep(0.1)
@@ -33,7 +32,7 @@ def findEnemy():
         img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
 
-        # Draw bounding boxes and labels
+        # Draw bounding boxes and labels, thanks chatgpt lol
         for det in results.pred[0]:
             label = det[5]  # Class label
             conf = det[4]  # Confidence score
