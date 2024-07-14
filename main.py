@@ -1,11 +1,14 @@
-
 import time
+from multiprocessing import Process
 
 import detectors
 
 from detectors import getPlayerHealth, getPlayerShield
 
-from HealthManager import healthManager
+from HealthManager import HealthManager
+
+from KillsManager import KillsManager
+
 
 # il eventually fix this cuz i really dont want to have a billion global vars xd
 global frame
@@ -15,14 +18,8 @@ global isTeammateDead
 global isAlreadyDead
 
 
-
-
-
-
-
 def main():
-
-    HealthMgr = healthManager()
+    HealthMgr = HealthManager()
 
     while True:
 
@@ -36,7 +33,7 @@ def main():
 
         isAlive = detectors.getAlive()
         if HealthMgr.health and not isAlive:
-            isAlive = True # override because holy shit its not consistent
+            isAlive = True  # override because holy shit its not consistent
 
         HealthMgr.updateAlive(isAlive)
 
@@ -44,6 +41,10 @@ def main():
         time.sleep(1)
 
 
-if __name__ == '__main__':
-    main()
 
+
+
+if __name__ == '__main__':
+    KillsMgr = KillsManager()
+    KillsMgr.beginMonitoring()
+    main()

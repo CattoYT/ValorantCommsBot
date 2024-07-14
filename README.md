@@ -38,6 +38,9 @@ My alive status is checked by looking for the combat report (NEEDS CHANGE)
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
 
+Snake case stuff is often from AI, but not always, so thanks github copilot <3
+
+
 # Disclaimer + Legal Stuff
 
 

@@ -4,7 +4,7 @@ import speaker as spk
 
 
 
-class healthManager:
+class HealthManager:
     def __init__(self):
         self.health = 100
         self.shield = 0
@@ -21,7 +21,7 @@ class healthManager:
         self.health = hp
         if self.isAlive == False:
             self.health = 0
-        if int(self.health) < 50 and not self.isAlreadyLow:
+        if int(self.health) < 50 and not self.isAlreadyLow and self.isAlive:
             print("HEALTH LOW")
             spk.sayVoice(spk.getRandomFile('low-hp', 'mio'))
             self.isAlreadyLow = True
@@ -30,7 +30,7 @@ class healthManager:
             self.isAlreadyLow = False
 
         elif not self.health:
-            print("NO HEALTH")
+            print("MISSING HEALTH")
 
 
     def updateShield(self, shield):

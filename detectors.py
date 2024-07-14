@@ -86,13 +86,16 @@ def getDeaths(screenshot):
 
 
 #checks for appearances of my name in the area where kills should be
-def getKills():
+def getKills(me=True): # me is cuz i sometimes use name hider lol
     region_x = 1244   # X-coordinate of the top-left corner of the region
     region_y = 0  # Y-coordinate of the top-left corner of the region
     region_width = 537 # Width of the region
     region_height = 1080 # Height of the region
+    if me:
 
-    matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', confidence=0.9, region=(region_x, region_y, region_width, region_height))
+        matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
+    else:
+        matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
     killcount = 0
     if matches:
         for i in matches:
