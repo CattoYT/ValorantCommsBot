@@ -17,8 +17,19 @@ def capture_screenshot():
 
 
 def read_text(image):
-    text = pytesseract.image_to_string(image) # find a way to improve confidence or just swap over to something else lol
+    text = pytesseract.image_to_string(image) # test the below line tmr, genned by gpt
+    #text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
     return text
+
+class kerasOCR:
+
+    def __init__(self):
+        import keras_ocr
+        self.pipeline = keras_ocr.pipeline.Pipeline()
+
+    def readTextWithKerasOCR(self, image):
+        print(self.pipeline.recognize(image))
+        pass
 
 
 def getPlayerHealth(screenshot):
@@ -28,12 +39,12 @@ def getPlayerHealth(screenshot):
     region_width = 77  # Width of the region
     region_height = 46  # Height of the region
 
-    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
+    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height)).convert('L')
 
 
-    screenshot.save("debugging-images/healthtest.png")
-    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.LANCZOS)
 
+    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.BICUBIC) # bilinear is broken, lanczos is aight
+    anti_alias_image.save("debugging-images/healthtest.png")
     text = read_text(anti_alias_image)
 
     text = re.sub(r'\D', '', text)

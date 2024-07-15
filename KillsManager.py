@@ -18,7 +18,7 @@ class KillsManager:
 
     def monitorKills(self):
         while not self.stopEvent.is_set():
-            killcount = detectors.getKills(me=False)
+            killcount = detectors.getKills(me=True)
             print('killcount = ' + str(killcount))
 
             #for i in range(killcount):

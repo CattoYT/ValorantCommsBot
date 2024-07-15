@@ -34,7 +34,6 @@ My alive status is checked by looking for the combat report (NEEDS CHANGE)
 
 - [OpenCV](https://opencv.org/)
   - License: Apache License 2.0
-  - 
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
 
