@@ -34,7 +34,9 @@ class kerasOCR:
 
 
 def getPlayerHealth(screenshot):
-    # Define the region of interest (ROI) for the health bar
+
+    #after about 2 hours of suffering, i have concluded that im just going to ahve both systems. if it fails both times, then oh well the player is prob dead
+    # i would recommend this code to never be touched again, it works and i dont want to break it
     region_x = 574
     region_y = 1003
     region_width = 77
@@ -42,28 +44,29 @@ def getPlayerHealth(screenshot):
 
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
     anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.BICUBIC)
+    text = read_text(anti_alias_image)  # try pure white
 
     # copilot decided to try hsv and oh well i guess im going to use hsv now
     # half done by me, half copilot
-    imageHSV = cv2.cvtColor(np.array(anti_alias_image), cv2.COLOR_RGB2HSV)
-    mask = cv2.inRange(imageHSV, utils.rgb2HSV(255,255,255, "L"), utils.rgb2HSV(255,255,255, "U"))
+    if text == "":
 
-    text = read_text(Image.fromarray(mask)) # try pure white
+        imageHSV = cv2.cvtColor(np.array(anti_alias_image), cv2.COLOR_RGB2HSV)
+        mask = cv2.inRange(imageHSV, utils.rgb2HSV(255,255,255, "L"), utils.rgb2HSV(255,255,255, "U"))
 
-    try:
-        int(text)
-    except:
-        print("HEEHEE")
+        text = read_text(Image.fromarray(mask)) # try pure white
+
+    if text == "":
         LBYellow, UBYellow = utils.rgb2HSV(235, 238, 177, "B", tolerance=0)
 
         mask = cv2.inRange(imageHSV, LBYellow, UBYellow)  # yellow healdwth
         text = read_text(Image.fromarray(mask))
 
-    Image.fromarray(mask).save("debugging-images/healthtest.png")
+    anti_alias_image.save("debugging-images/healthtest.png")
 
 
     text = re.sub(r'\D', '', text)
     return text
+
 
 
 def getPlayerShield(screenshot):

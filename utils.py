@@ -13,7 +13,7 @@ def hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
 # copilot thanks
-def rgb2HSV(r, g, b, bound, tolerance=10):
+def rgb2HSV(r, g, b, bound, tolerance=0):
     """
     Convert an RGB color to HSV with a specified tolerance.
 
