@@ -8,7 +8,7 @@ soundfile==0.12.1
 keyboard==0.13.5
 mouse==0.7.1
 pandas==2.1.4
-opencv-python==4.8.1.78
+opencv-python>=4.8.1.78
 requests==2.31.0
 PyYAML==6.0.1
 ultralytics==8.1.1

@@ -17,8 +17,9 @@ def capture_screenshot():
 
 
 def read_text(image):
-    text = pytesseract.image_to_string(image) # test the below line tmr, genned by gpt
-    #text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
+    #text = pytesseract.image_to_string(image) # test the below line tmr, genned by gpt
+    text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
+    print(text)
     return text
 
 class kerasOCR:
@@ -33,19 +34,33 @@ class kerasOCR:
 
 
 def getPlayerHealth(screenshot):
-    # health location
-    region_x = 574  # X-coordinate of the top-left corner of the region
-    region_y = 1003  # Y-coordinate of the top-left corner of the region
-    region_width = 77  # Width of the region
-    region_height = 46  # Height of the region
+    # Define the region of interest (ROI) for the health bar
+    region_x = 574
+    region_y = 1003
+    region_width = 77
+    region_height = 46
 
-    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height)).convert('L')
+    screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
+    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.BICUBIC)
 
+    # copilot decided to try hsv and oh well i guess im going to use hsv now
+    # half done by me, half copilot
+    imageHSV = cv2.cvtColor(np.array(anti_alias_image), cv2.COLOR_RGB2HSV)
+    mask = cv2.inRange(imageHSV, utils.rgb2HSV(255,255,255, "L"), utils.rgb2HSV(255,255,255, "U"))
 
+    text = read_text(Image.fromarray(mask)) # try pure white
 
-    anti_alias_image = screenshot.resize((screenshot.width * 6, screenshot.height * 6), Image.BICUBIC) # bilinear is broken, lanczos is aight
-    anti_alias_image.save("debugging-images/healthtest.png")
-    text = read_text(anti_alias_image)
+    try:
+        int(text)
+    except:
+        print("HEEHEE")
+        LBYellow, UBYellow = utils.rgb2HSV(235, 238, 177, "B", tolerance=0)
+
+        mask = cv2.inRange(imageHSV, LBYellow, UBYellow)  # yellow healdwth
+        text = read_text(Image.fromarray(mask))
+
+    Image.fromarray(mask).save("debugging-images/healthtest.png")
+
 
     text = re.sub(r'\D', '', text)
     return text
@@ -60,7 +75,7 @@ def getPlayerShield(screenshot):
 
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
 
-    screenshot.save("debugging-images/healthtest.png")
+    screenshot.save("debugging-images/shieldtest.png")
     # Apply anti-aliasing using the `ANTIALIAS` filter
     anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.LANCZOS)
 
