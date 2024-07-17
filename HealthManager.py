@@ -21,7 +21,7 @@ class HealthManager:
         self.health = hp
         if self.isAlive == False:
             self.health = 0
-        if int(self.health) < 50 and not self.isAlreadyLow and self.isAlive:
+        if int(self.health) < 50 and not self.isAlreadyLow and self.isAlive and int(self.health) != 0:
             print("HEALTH LOW")
             spk.sayVoice(spk.getRandomFile('low-hp', 'mio'))
             self.isAlreadyLow = True
@@ -35,6 +35,8 @@ class HealthManager:
 
     def updateShield(self, shield):
         self.shield = shield
+        if self.isAlive == False:
+            self.shield = 0
 
     def updateAlive(self, alive):
 

@@ -20,16 +20,18 @@ def findEnemy():
     active_window_title = get_active_window_title()
 
     time.sleep(0.1)
+    img = ImageGrab.grab()
     if "VALORANT" in active_window_title:
         img = ImageGrab.grab()
-
+        yes= True
+    else:
+        yes = False
 
 
     # Inference
-    if isinstance (img, types.NoneType):
-        return False
 
-    results = model(img)
+    if yes:
+        results = model(img)
     model.conf = 0.6
     foundshit = False
 

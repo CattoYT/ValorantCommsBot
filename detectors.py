@@ -79,8 +79,12 @@ def getPlayerShield(screenshot):
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
 
     screenshot.save("debugging-images/shieldtest.png")
-    # Apply anti-aliasing using the `ANTIALIAS` filter
-    anti_alias_image = screenshot.resize((screenshot.width * 8, screenshot.height * 8), Image.LANCZOS)
+
+    #for once, this doesn't change color constantly :D
+    # static white so its just white pixels
+    mask = cv2.inRange(np.array(screenshot), (220, 220, 220), (255, 255, 255))
+    anti_alias_image = Image.fromarray(mask).resize((screenshot.width * 8, screenshot.height * 8), Image.BICUBIC)
+
 
     text = read_text(anti_alias_image)
 
