@@ -3,6 +3,9 @@
 A valorant bot that can be used to automate communications using voice clips from different games.
 This was written because I was bored + inspiration from SociallyIneptWeeb
 
+This bot was partially written because I hate talking in VC with random people, so why not spend half a year making a program to do it for me?
+I guess other socially inept (haha) people can use it too, so win win?
+
 
 
 
