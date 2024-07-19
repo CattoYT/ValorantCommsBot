@@ -1,24 +1,26 @@
-import time
 from multiprocessing import Process, Event
-import speaker as spk
+from Modules import speaker as spk
 import cv2
-from PIL import Image
 import numpy as np
 from mss.windows import MSS as mss
+from PIL import Image
 
 class EnemyManger:
     def __init__(self, visualize=False):
-        import torch
-        self.model = torch.hub.load('ultralytics/yolov5', 'custom', 'valorant-11.engine', source="local")
+
         self.visualize = visualize
         self.stopEvent = Event()
         self.monitorProcess = None
+        self.model = None
 
 
 
 
     def findEnemy(self):
 
+        if self.model == None:
+            import torch
+            self.model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source='local', force_reload=True)
 
         with mss() as sct:
             # cap my first monitor
@@ -27,15 +29,16 @@ class EnemyManger:
             while not self.stopEvent.is_set():
 
                 sct_img = sct.grab(monitor)
-
+                img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
                 self.model.conf = 0.5
-                results = self.model(sct_img)
+                results = self.model(img)
+
                 self.enemyCount = 0
 
                 # thanks copilot for this lol
                 if self.visualize:
                     cv2.namedWindow("Detection", cv2.WINDOW_NORMAL)
-                    img_cv = cv2.cvtColor(np.array(sct_img), cv2.COLOR_RGB2BGR)
+                    img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
                     for det in results.pred[0]:
                         label = det[5]  # Class label
@@ -67,6 +70,7 @@ class EnemyManger:
         if self.monitorProcess is None or not self.monitorProcess.is_alive():
             self.monitorProcess = Process(target=self.findEnemy)
             self.monitorProcess.start()
+if __name__ == "__main__":
 
-enemyMGR = EnemyManger()
-enemyMGR.beginScreenRecording()
+    enemyMGR = EnemyManger()
+    enemyMGR.beginScreenRecording()

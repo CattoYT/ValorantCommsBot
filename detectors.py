@@ -7,7 +7,8 @@ import pyautogui
 from PIL import Image
 from pytesseract import pytesseract
 
-import utils
+from Modules import utils
+
 
 def capture_screenshot():
     region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
@@ -21,16 +22,6 @@ def read_text(image):
     text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
     print(text)
     return text
-
-class kerasOCR:
-
-    def __init__(self):
-        import keras_ocr
-        self.pipeline = keras_ocr.pipeline.Pipeline()
-
-    def readTextWithKerasOCR(self, image):
-        print(self.pipeline.recognize(image))
-        pass
 
 
 def getPlayerHealth(screenshot):
@@ -51,7 +42,7 @@ def getPlayerHealth(screenshot):
     if text == "":
 
         imageHSV = cv2.cvtColor(np.array(anti_alias_image), cv2.COLOR_RGB2HSV)
-        mask = cv2.inRange(imageHSV, utils.rgb2HSV(255,255,255, "L"), utils.rgb2HSV(255,255,255, "U"))
+        mask = cv2.inRange(imageHSV, utils.rgb2HSV(255, 255, 255, "L"), utils.rgb2HSV(255, 255, 255, "U"))
 
         text = read_text(Image.fromarray(mask)) # try pure white
 

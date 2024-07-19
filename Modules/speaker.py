@@ -8,7 +8,7 @@ import random
 import time
 
 
-from utils import get_file_duration, find_device_id
+from Modules.utils import get_file_duration, find_device_id
 
 play_lock = threading.Condition()
 def play_audio(file_path, volume):

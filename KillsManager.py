@@ -1,5 +1,5 @@
 import random
-import speaker as spk
+from Modules import speaker as spk
 import detectors
 from multiprocessing import Process, Event
 import time

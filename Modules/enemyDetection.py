@@ -5,6 +5,8 @@ import win32gui
 from PIL import Image
 import torch
 
+# DEPRECATED DON'T USE
+
 model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source="local", force_reload=True)
 
 def get_active_window_title():
