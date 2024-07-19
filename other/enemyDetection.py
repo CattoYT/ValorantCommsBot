@@ -9,8 +9,7 @@ import torch
 from PIL import Image, ImageGrab
 import numpy as np
 
-model = torch.hub.load(R'yolov5', 'custom', path=R'valorant.pt', source='local')
-
+model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source="local", force_reload=True)
 def get_active_window_title():
     return win32gui.GetWindowText(win32gui.GetForegroundWindow())
 

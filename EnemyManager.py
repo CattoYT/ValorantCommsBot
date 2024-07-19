@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 from mss.windows import MSS as mss
 
-
+# TODO: Rewrite this file for yolov5 with tensorrt
 class EnemyManger:
     def __init__(self):
         from ultralytics import YOLO
@@ -37,8 +37,8 @@ class EnemyManger:
                                  iou=0.5,
                                  device='cuda',
                                  show=True)
-                for r in results:
-                    print(r) # TODO: fix this and print the amount of the 'enemy' label
+
+                print(results[0].boxes.cls) # TODO: fix this and print the amount of the 'enemy' label
 
 
 
