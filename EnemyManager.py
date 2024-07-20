@@ -12,6 +12,7 @@ class EnemyManger:
         self.stopEvent = Event()
         self.monitorProcess = None
         self.model = None
+        self.imageQueue = []
 
 
 
@@ -20,17 +21,36 @@ class EnemyManger:
 
         if self.model == None:
             import torch
+            print("Loading model")
+
             self.model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source='local', force_reload=True)
 
         with mss() as sct:
             # cap my first monitor
             monitor = sct.monitors[2]
+            previousCount = 0
+            self.model.conf = 0.69
+            # Calculate the top right corner coordinates for the 300x300 pixels box
 
             while not self.stopEvent.is_set():
 
                 sct_img = sct.grab(monitor)
                 img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
-                self.model.conf = 0.5
+
+                # box code genned from copilot
+                # Define the box coordinates (x_min, y_min, x_max, y_max)
+
+                img_np = np.array(img)
+                height, width, _ = img_np.shape
+                box_coords = (1920 - 70, 100, 1080 - 30, 255)  # (x_min, y_min, x_max, y_max)
+
+
+                # Set the specified area to black
+                img_np[box_coords[1]:box_coords[3], box_coords[0]:box_coords[2]] = [0, 0, 0]
+                img = Image.fromarray(img_np)
+
+
+
                 results = self.model(img)
 
                 self.enemyCount = 0
@@ -59,18 +79,33 @@ class EnemyManger:
                     for det in results.pred[0]:
                         if det[4] > self.model.conf:
                             self.enemyCount += 1
+                print(f"Enemies: {self.enemyCount}")
+                if self.enemyCount > 0 and previousCount != self.enemyCount:
+                    pass
+                previousCount = self.enemyCount
 
-                if self.enemyCount > 0:
-                    print("Enemies: self.enemyCount")
-                    spk.sayVoice("voices/VO_Firefly_Enemy_Target_Found_01.ogg")
+    def recordScreen(self): # will implement later
+
+        with mss() as sct:
+            # cap my first monitor
+            monitor = sct.monitors[2]
+
+            while True:
+                cv2.namedWindow("Detection", cv2.WINDOW_NORMAL)
+
+
+                sct_img = sct.grab(monitor)
+                img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
+
 
     def beginScreenRecording(self):
 
 
         if self.monitorProcess is None or not self.monitorProcess.is_alive():
-            self.monitorProcess = Process(target=self.findEnemy)
+            self.monitorProcess = Process(target=self.findEnemy())
             self.monitorProcess.start()
+
 if __name__ == "__main__":
 
-    enemyMGR = EnemyManger()
+    enemyMGR = EnemyManger(visualize=True)
     enemyMGR.beginScreenRecording()
