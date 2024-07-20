@@ -22,6 +22,16 @@ class EnemyManger:
         if self.model == None:
             import torch
             print("Loading model")
+# https://universe.roboflow.com/nanjing-university-eotbh/valorantyolov8/model/2
+
+
+            # Screenshotting tldr:
+            # I've tried window-capture, fastcam, dxcam, and have decided to give up and just keep using mss
+            # i hate this so much aaaaaaa
+            # dxcam doesn't want to capture my main monitor cuz its on integrated graphics (laptop moment)
+            # fastcam didn't compile
+            # window-capture failed to init winrt when hooked up to literally anything
+
 
             self.model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source='local', force_reload=True)
 
@@ -81,7 +91,7 @@ class EnemyManger:
                             self.enemyCount += 1
                 print(f"Enemies: {self.enemyCount}")
                 if self.enemyCount > 0 and previousCount != self.enemyCount:
-                    pass
+                    print("Speaking")
                 previousCount = self.enemyCount
 
     def recordScreen(self): # will implement later
