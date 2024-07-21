@@ -6,12 +6,16 @@ import pyautogui
 
 from PIL import Image
 from pytesseract import pytesseract
+from mss.windows import MSS as mss
 
 from Modules import utils
 
+sct = mss()
 
 def capture_screenshot():
-    region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
+    region = sct.grab(sct.monitors[2])
+    region = Image.frombytes('RGB', region.size, region.bgra, 'raw', 'BGRX')
+    #region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
     # screenshot = Image.open('testimage.png')
 
     return region
@@ -20,7 +24,6 @@ def capture_screenshot():
 def read_text(image):
     #text = pytesseract.image_to_string(image) # test the below line tmr, genned by gpt
     text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
-    print(text)
     return text
 
 

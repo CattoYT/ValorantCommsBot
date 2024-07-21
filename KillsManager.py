@@ -17,6 +17,8 @@ class KillsManager:
         self.stopEvent = Event()
         self.monitorProcess = None
         self.killcount = 0
+        #
+
 
     def monitorKills(self):
         while not self.stopEvent.is_set():

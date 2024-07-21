@@ -1,4 +1,6 @@
+import threading
 import time
+from multiprocessing import Process
 
 import detectors
 
@@ -22,12 +24,11 @@ global isAlreadyDead
 def main():
     HealthMgr = HealthManager()
     EnemyMgr = EnemyManager(visualize=True)
-    EnemyMgr.beginScreenRecording()
+    EnemyMgr.beginEnemyDetection()
 
     while True:
 
         frame = detectors.capture_screenshot()
-
         HealthMgr.updateHP(getPlayerHealth(frame) or None)
         HealthMgr.updateShield(getPlayerShield(frame) or None)
 
