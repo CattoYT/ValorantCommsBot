@@ -5,14 +5,12 @@ import numpy as np
 from mss.windows import MSS as mss
 from PIL import Image
 
-class EnemyManger:
+class EnemyManager:
     def __init__(self, visualize=False):
-
         self.visualize = visualize
         self.stopEvent = Event()
         self.monitorProcess = None
         self.model = None
-        self.imageQueue = []
 
 
 
@@ -24,13 +22,8 @@ class EnemyManger:
             print("Loading model")
 # https://universe.roboflow.com/nanjing-university-eotbh/valorantyolov8/model/2
 
-
-            # Screenshotting tldr:
-            # I've tried window-capture, fastcam, dxcam, and have decided to give up and just keep using mss
-            # i hate this so much aaaaaaa
-            # dxcam doesn't want to capture my main monitor cuz its on integrated graphics (laptop moment)
-            # fastcam didn't compile
-            # window-capture failed to init winrt when hooked up to literally anything
+# for this, I am planning to move back to a custom trained yolov8 model using the above dataset, since ripping the model didn't really work
+# will also have to learn how yolov8 works, or if i can hotswap it into the below code
 
 
             self.model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source='local', force_reload=True)
@@ -52,7 +45,7 @@ class EnemyManger:
 
                 img_np = np.array(img)
                 height, width, _ = img_np.shape
-                box_coords = (1920 - 70, 100, 1080 - 30, 255)  # (x_min, y_min, x_max, y_max)
+                box_coords = (width - 70, 100, height - 30, 255)  # (x_min, y_min, x_max, y_max)
 
 
                 # Set the specified area to black
@@ -89,9 +82,14 @@ class EnemyManger:
                     for det in results.pred[0]:
                         if det[4] > self.model.conf:
                             self.enemyCount += 1
-                print(f"Enemies: {self.enemyCount}")
+
+                if self.enemyCount > 0:
+                    print(f"[OVERRIDE] Enemies: {self.enemyCount}")
+
+
                 if self.enemyCount > 0 and previousCount != self.enemyCount:
                     print("Speaking")
+
                 previousCount = self.enemyCount
 
     def recordScreen(self): # will implement later
@@ -117,5 +115,5 @@ class EnemyManger:
 
 if __name__ == "__main__":
 
-    enemyMGR = EnemyManger(visualize=True)
+    enemyMGR = EnemyManager(visualize=True)
     enemyMGR.beginScreenRecording()

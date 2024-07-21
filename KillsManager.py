@@ -13,16 +13,20 @@ import time
 
 class KillsManager:
     def __init__(self):
+
         self.stopEvent = Event()
         self.monitorProcess = None
+        self.killcount = 0
 
     def monitorKills(self):
         while not self.stopEvent.is_set():
-            killcount = detectors.getKills(me=True)
-            print('killcount = ' + str(killcount))
+            self.killcount = detectors.getKills(me=True)
+
+
 
             #for i in range(killcount):
-            if killcount > 0: # temporary change because I want to eventually have a system to tell when the kills happened and be able to not say a voice line if it is too close together so im not spamming vc
+            if self.killcount > 0: # temporary change because I want to eventually have a system to tell when the kills happened and be able to not say a voice line if it is too close together so im not spamming vc
+                #print('killcount = ' + str(self.killcount)) # this can stay commented for now since rng is guaranteed
                 if random.randint(1, 10) > 0:
                     print('monitorKills - succeeded rng (guaranteed rn)')
                     spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
