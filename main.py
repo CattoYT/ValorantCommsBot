@@ -20,11 +20,12 @@ global isAlive
 global isTeammateDead
 global isAlreadyDead
 
+# for deciding what goes in main loop, it should be anything that can run on a 5s cooldown. Anything outside of that probably should be in its own file with its own manager
+#python is also way too slow for this lmao
 
 def main():
     HealthMgr = HealthManager()
-    EnemyMgr = EnemyManager(visualize=True)
-    EnemyMgr.beginEnemyDetection()
+
 
     while True:
 
@@ -36,17 +37,16 @@ def main():
         print("Shield: " + str(HealthMgr.shield))
         print("Kills: " + str(KillsMgr.killcount))
         print("Enemies: " + str(EnemyMgr.enemyCount))
+        print("")
         isAlive = detectors.getAlive()
         if HealthMgr.health and not isAlive:
             isAlive = True  # override because holy shit its not consistent
-
         HealthMgr.updateAlive(isAlive)
 
 
 
-        print("\n")
-        time.sleep(1)
 
+        time.sleep(1)
 
 
 
@@ -55,4 +55,6 @@ def main():
 if __name__ == '__main__':
     KillsMgr = KillsManager()
     KillsMgr.beginMonitoring()
+    EnemyMgr = EnemyManager(visualize=True)
+    EnemyMgr.beginEnemyDetection()
     main()

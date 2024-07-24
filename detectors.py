@@ -23,7 +23,7 @@ def capture_screenshot():
 
 def read_text(image):
     #text = pytesseract.image_to_string(image) # test the below line tmr, genned by gpt
-    text = pytesseract.image_to_string(image, config=r'--oem 3 --psm 8 -c tessedit_char_whitelist=0123456789')
+    text = pytesseract.image_to_string(image, config=r'--psm 8 -c tessedit_char_whitelist=0123456789')
     return text
 
 
@@ -68,20 +68,20 @@ def getPlayerShield(screenshot):
     region_x = 545  # X-coordinate of the top-left corner of the region
     region_y = 1018  # Y-coordinate of the top-left corner of the region
     region_width = 19  # Width of the region
-    region_height = 19  # Height of the region
+    region_height = 19# Height of the region
 
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
 
-    screenshot.save("debugging-images/shieldtest.png")
+
 
     #for once, this doesn't change color constantly :D
     # static white so its just white pixels
     mask = cv2.inRange(np.array(screenshot), (220, 220, 220), (255, 255, 255))
-    anti_alias_image = Image.fromarray(mask).resize((screenshot.width * 8, screenshot.height * 8), Image.BICUBIC)
+    anti_alias_image = Image.fromarray(mask).resize((screenshot.width * 6, screenshot.height * 6), Image.BICUBIC)
 
-
+    anti_alias_image.save("debugging-images/shieldtest.png")
     text = read_text(anti_alias_image)
-
+    text = re.sub(r'\D', '', text) # without this line, it somehow reads a newline from narnia and triggered my ocd so hard i spend 45 minutes trying to fix it
     return text
 
 #scans coords with color (checks if any teammates are dead)
@@ -123,15 +123,9 @@ def getKills(me=True): # me is cuz i sometimes use name hider lol
         matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
     else:
         matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
-    killcount = 0
-    if matches:
-        for i in matches:
-            killcount +=1
-        return killcount
 
+    return len(list(matches))
 
-    else:
-        return None
 
 
 def getAlive():
@@ -142,10 +136,7 @@ def getAlive():
 
 
 #oh nyo still being added
-def roundDetector():
-    print('checking for round loss')
-    if pyautogui.locateOnScreen('debugging-images/roundloss.png', confidence=0.9):
-        return 'loss'
+
 
 def getWinLoss():
     if pyautogui.locateOnScreen('debugging-images/defeat.png', confidence=0.8):

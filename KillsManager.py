@@ -1,5 +1,5 @@
 import random
-from Modules import speaker as spk
+import speaker as spk
 import detectors
 from multiprocessing import Process, Event
 import time
@@ -17,7 +17,7 @@ class KillsManager:
         self.stopEvent = Event()
         self.monitorProcess = None
         self.killcount = 0
-        #
+
 
 
     def monitorKills(self):
@@ -30,10 +30,11 @@ class KillsManager:
             if self.killcount > 0: # temporary change because I want to eventually have a system to tell when the kills happened and be able to not say a voice line if it is too close together so im not spamming vc
                 #print('killcount = ' + str(self.killcount)) # this can stay commented for now since rng is guaranteed
                 if random.randint(1, 10) > 0:
-                    print('monitorKills - succeeded rng (guaranteed rn)')
+                    #print('monitorKills - succeeded rng (guaranteed rn)')
                     spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
                 else:
-                    print('monitorKills - failed rng')
+                    pass
+                    #print('monitorKills - failed rng')
             time.sleep(5)
 
 

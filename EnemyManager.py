@@ -1,12 +1,11 @@
 from multiprocessing import Process, Event
 
 import detectors
-from Modules import speaker as spk
 import cv2
 import numpy as np
 from mss.windows import MSS as mss
 from PIL import Image
-import time
+
 
 class EnemyManager:
     def __init__(self, visualize=False):
@@ -14,6 +13,7 @@ class EnemyManager:
         self.stopEvent = Event()
         self.monitorProcess = None
         self.model = None
+        self.enemyCount = 0
 
 
 

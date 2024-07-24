@@ -1,6 +1,6 @@
 from types import NoneType
 
-from Modules import speaker as spk
+import speaker as spk
 
 
 class HealthManager:
@@ -33,9 +33,14 @@ class HealthManager:
 
 
     def updateShield(self, shield):
+        if isinstance(shield, NoneType):
+            shield = 0
         self.shield = shield
+
         if self.isAlive == False:
             self.shield = 0
+
+
 
     def updateAlive(self, alive):
 
