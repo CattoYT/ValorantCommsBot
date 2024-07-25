@@ -4,7 +4,7 @@ A valorant bot that can be used to automate communications using voice clips fro
 This was written because I was bored + inspiration from SociallyIneptWeeb
 
 
-
+GO TO THE [REWRITE](https://github.com/CattoYT/ValorantCommsBot/tree/rewrite) BRANCH ITS A LOT MORE UPDATED!!!
 
 
 # Setup:
