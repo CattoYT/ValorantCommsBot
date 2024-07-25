@@ -18,8 +18,8 @@ def play_audio(file_path, volume):
     data, fs = sf.read(file_path, dtype='float32')
 
     #keyboard.press('v')
-    sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
-    #sd.play(data, fs)
+    #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
+    sd.play(data, fs)
     sd.wait()
     time.sleep(0.1)
     #keyboard.release('v')

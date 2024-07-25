@@ -7,7 +7,8 @@ This bot was partially written because I hate talking in VC with random people, 
 I guess other socially inept (haha) people can use it too, so win win?
 
 
-
+A few of the events that are monitored in this bot are not actually used. 
+If anyone wants to submit a PR to have stuff done with the events then please do! 
 
 
 # Setup:
@@ -17,14 +18,6 @@ Run the following (ideally in a venv):
 pip install -r requirements.txt
 ```
 
-
-# Reminders
-
-Teammate kills are detected by searching for the green pixel at certain coords
-
-My kills are located by searching for killname.png in the top right corner of the screen
-
-My alive status is checked by looking for the combat report (NEEDS CHANGE)
 
 
 ## Acknowledgements
