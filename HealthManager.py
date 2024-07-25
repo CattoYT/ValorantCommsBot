@@ -22,7 +22,7 @@ class HealthManager:
             self.health = 0
         if int(self.health) < 50 and not self.isAlreadyLow and self.isAlive and int(self.health) != 0:
             print("HEALTH LOW")
-            spk.sayVoice(spk.getRandomFile('low-hp', 'mio'))
+            spk.sayVoice(spk.getRandomFile('low-hp'))
             self.isAlreadyLow = True
 
         elif int(self.health) > 50:
@@ -50,7 +50,7 @@ class HealthManager:
             print("DEAD")
             if self.isAlreadyDead:
                 return
-            spk.sayVoice(spk.getRandomFile('death', 'mio'))
+            spk.sayVoice(spk.getRandomFile('death'))
             self.isAlreadyDead = True
             pass
         else:

@@ -32,12 +32,12 @@ class RPManager:
 
             text = pytesseract.image_to_string(screenshot, config=r'--psm 8')
             if "Round Loss" in text:
-                spk.sayVoice(spk.getRandomFile('new-round', 'mio'))
+                spk.sayVoice(spk.getRandomFile(['loss', 'new-round']))
                 self.previousRoundResult = "loss"
                 time.sleep(50)# arbitrary number just guessing the average round length so that this doesn't spam and doesn't check this too often since its just not necessary
             elif "Round Won" in text:
                 self.previousRoundResult = "Win"
-                spk.sayVoice(spk.getRandomFile('new-round', 'mio'))
+                spk.sayVoice(spk.getRandomFile(['victory', 'new-round']))
                 time.sleep(50)
 
 

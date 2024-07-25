@@ -18,6 +18,11 @@ Run the following (ideally in a venv):
 pip install -r requirements.txt
 ```
 
+EnemyManager currently makes use of [YOLOv5](https://github.com/ultralytics/yolov5) models from [Leaf48](https://github.com/Leaf48/YOLO-Models-For-Valorant/tree/main/Yolov5/YOLOv5s)
+Please move them into this root folder and make sure the name matches in the torch.hub.load call in EnemyManager.py.
+This will be a thing until my model finishes training and I will be providing that as default in this repo!
+
+Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager and RPManager in main.py for a somewhat decent (yet small) release.
 
 
 ## Acknowledgements

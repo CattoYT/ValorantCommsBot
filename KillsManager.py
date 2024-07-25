@@ -31,7 +31,7 @@ class KillsManager:
                 #print('killcount = ' + str(self.killcount)) # this can stay commented for now since rng is guaranteed
                 if random.randint(1, 10) > 0:
                     #print('monitorKills - succeeded rng (guaranteed rn)')
-                    spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
+                    spk.sayVoice(spk.getRandomFile('encouragement'))
                 else:
                     pass
                     #print('monitorKills - failed rng')

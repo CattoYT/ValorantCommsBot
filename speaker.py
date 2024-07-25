@@ -55,14 +55,24 @@ def getRandomVoiceLine(scenario, va):
             case 'teammateDeath':
         '''
 
-def getRandomFile(scenario, va):
-    files = os.listdir(f'voices/{va}/{scenario}')
+
+def getRandomFile(scenario):
+    
+    va = 'mio' # Change me to the character!
+
+    # fixed by copilot to account for lists for multiple voice line scenarios
+    files = []
+
+    if isinstance(scenario, list):
+        for i in scenario:
+            files.extend([os.path.join(f'voices/{va}/{i}', file) for file in os.listdir(f'voices/{va}/{i}')])
+    elif isinstance(scenario, str):
+        files = [os.path.join(f'voices/{va}/{scenario}', file) for file in os.listdir(f'voices/{va}/{scenario}')]
+
     if files:
-        random_file = random.choice(files)
-        file_path = os.path.join(f'voices/{va}/{scenario}/', random_file)
-        #print(scenario, "|", file_path)
-        return file_path
+        return random.choice(files)
+    return None
 
 
 if __name__ == '__main__':
-    sayVoice(getRandomFile('new-round', 'mio'))
+    sayVoice(getRandomFile(['health-recovered', 'teammate-death']))

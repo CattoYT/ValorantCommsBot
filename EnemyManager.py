@@ -23,13 +23,13 @@ class EnemyManager:
         if self.model == None:
             import torch
             print("Loading model")
-# https://universe.roboflow.com/nanjing-university-eotbh/valorantyolov8/model/2
 
 # for this, I am planning to move back to a custom trained yolov8 model using the above dataset, since ripping the model didn't really work
 # will also have to learn how yolov8 works, or if i can hotswap it into the below code
 
-
-            self.model = torch.hub.load(R'yolov5', 'custom', 'valorant-11.engine', source='local', force_reload=True)
+            # Change me to the right model!
+            modelname = "valorant-11.engine"
+            self.model = torch.hub.load(R'yolov5', 'custom', modelname, source='local', force_reload=True)
 
         previousCount = 0
         self.model.conf = 0.69
