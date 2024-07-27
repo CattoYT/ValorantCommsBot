@@ -10,7 +10,7 @@ from ultralytics import YOLO
 # exportd via roboflow = planted spike
 # valorant = unplanted spike
 
-model = YOLO("best (1).pt")
+model = YOLO("Models/best-final.pt")
 cv2.namedWindow("valorante", cv2.WINDOW_NORMAL)
 while True:
     results = model(detectors.capture_screenshot())

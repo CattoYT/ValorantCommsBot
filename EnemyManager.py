@@ -1,12 +1,13 @@
+import os
 import time
-from multiprocessing import Process, Event
+from multiprocessing import Process, Event, Value
 
 import detectors
 import cv2
 import numpy as np
 from mss.windows import MSS as mss
 from PIL import Image
-
+import speaker as spk
 
 class EnemyManager:
     def __init__(self, visualize=False):
@@ -14,7 +15,7 @@ class EnemyManager:
         self.stopEvent = Event()
         self.monitorProcess = None
         self.model = None
-        self.enemyCount = 0
+        self.enemyCount = Value('i', 0)
 
 
 
@@ -105,6 +106,49 @@ class EnemyManager:
                 img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
 
 
+    def yoloV8Detection(self):
+        # This needs to run as fast as possible cuz valorant is fast asf
+
+        if self.model == None:
+            import ultralytics
+            modelPath = "Models/epoch270.pt"
+            self.model = ultralytics.YOLO(modelPath)
+            # converts the model to engine if it isnt already
+            print(modelPath[:-3] + ".engine")
+            if modelPath[-2:] == "pt":
+
+                try:
+                    self.model = ultralytics.YOLO(modelPath[:-3] + ".engine")
+                except:
+                    if input("Do you want to convert this model to "
+                             "TensorRT for faster inference? (y/n): ").lower() == "y":
+
+                        self.model.export(dynamic=True, format="engine")
+                        os.remove(modelPath[:-3] + ".onnx")
+                        self.model = ultralytics.YOLO(modelPath[:-3] + ".engine")
+
+        #while not self.stopEvent.is_set():
+        while True:
+            screenshot = detectors.capture_screenshot()
+            results = self.model(screenshot, conf=0.70, device="0")
+
+            detections = results[0].boxes
+            class_ids = detections.cls.cpu().numpy() if detections.cls is not None else [] # thanks copilot
+            total_objects = len(class_ids)
+
+            self.enemyCount.value = total_objects
+
+            print("Total enemies: " + str(total_objects))
+            if self.enemyCount.value > 1:
+                spk.sayVoice("voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
+
+
+
+
+
+
+
+
     def beginEnemyDetection(self):
 
 
@@ -113,12 +157,10 @@ class EnemyManager:
             self.monitorProcess.daemon = True
             self.monitorProcess.start()
             return
+
+
         return
 
 if __name__ == "__main__":
     em = EnemyManager(visualize=True)
-    em.beginEnemyDetection()
-    while True:
-        print(em.enemyCount)
-        time.sleep(1)
-        pass
+    em.yoloV8Detection()
