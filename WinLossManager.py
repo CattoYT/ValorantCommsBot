@@ -17,15 +17,15 @@ class WLManager():
     def monitorWinLoss(self):
         # THIS DOES CHANGE
         region_x = 1683
-        region_y = 1012
+        region_y = 856
         region_width = 121
-        region_height = 26
+        region_height = 156
 
         while True:
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
 
-            text = pytesseract.image_to_string(screenshot, config=r'--psm 8')
+            text = pytesseract.image_to_string(screenshot, config=r'--psm 7')
             print(text)
             if "Round Loss" in text:
                 spk.sayVoice(spk.getRandomFile(['loss', 'new-round']))
@@ -41,3 +41,12 @@ class WLManager():
             self.WinLossDetection = Process(target=self.monitorWinLoss)
             self.WinLossDetection.daemon = True
             self.WinLossDetection.start()
+
+
+
+if __name__ == "__main__":
+    wl = WLManager()
+    wl.beginWinLossDetection()
+    while True:
+        print(wl.previousRoundResult)
+        time.sleep(1)

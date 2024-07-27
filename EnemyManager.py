@@ -1,3 +1,4 @@
+import time
 from multiprocessing import Process, Event
 
 import detectors
@@ -113,3 +114,11 @@ class EnemyManager:
             self.monitorProcess.start()
             return
         return
+
+if __name__ == "__main__":
+    em = EnemyManager(visualize=True)
+    em.beginEnemyDetection()
+    while True:
+        print(em.enemyCount)
+        time.sleep(1)
+        pass
