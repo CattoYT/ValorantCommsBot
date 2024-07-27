@@ -1,5 +1,5 @@
 import time
-from multiprocessing import Process
+from multiprocessing import Process, Value
 
 from pytesseract import pytesseract
 import speaker as spk
@@ -8,33 +8,46 @@ import detectors
 
 class WLManager():
     def __init__(self):
-        self.previousRoundResult = "none"
+        self.previousRoundResultState = Value('i', 0)
         self.WinLossDetection = None
 
+    @property
+    def previousRoundResult(self):
+        return {
+            0: "Loss",
+            1: "Win"
 
+        }.get(self.previousRoundResultState.value, "Unknown")
 
 
     def monitorWinLoss(self):
         # THIS DOES CHANGE
-        region_x = 1683
+        region_x = 1637
         region_y = 856
-        region_width = 121
-        region_height = 156
+        region_width = 150
+        region_height = 180
 
         while True:
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
+            text = pytesseract.image_to_string(screenshot, config=r'--psm 4'
+                                                                  r'-c tessedit_char_whitelist="BUY PHASE" ')
 
-            text = pytesseract.image_to_string(screenshot, config=r'--psm 7')
-            print(text)
+            if text:
+                screenshot.save("yes.png")
+                print(text)
+            else:
+                print("No text detected")
+                time.sleep(1)
             if "Round Loss" in text:
                 spk.sayVoice(spk.getRandomFile(['loss', 'new-round']))
-                self.previousRoundResult = "loss"
+                self.previousRoundResultState = "loss"
                 time.sleep(50)
             elif "Round Win" in text:
-                self.previousRoundResult = "Win"
+                self.previousRoundResultState = "Win"
                 spk.sayVoice(spk.getRandomFile(['victory', 'new-round']))
                 time.sleep(50)
+
 
     def beginWinLossDetection(self):
         if self.WinLossDetection is None or not self.WinLossDetection.is_alive():
