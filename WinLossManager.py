@@ -38,7 +38,7 @@ class WLManager():
                 print(text)
             else:
                 print("No text detected")
-                time.sleep(1)
+                time.sleep(6)
             if "Round Loss" in text:
                 spk.sayVoice(spk.getRandomFile(['loss', 'new-round']))
                 self.previousRoundResultState = "loss"
@@ -48,6 +48,11 @@ class WLManager():
                 spk.sayVoice(spk.getRandomFile(['victory', 'new-round']))
                 time.sleep(50)
 
+    def gameScoreMonitor(self):
+        # This will be how i manage winning and losing in the future, where it watches for changes in the top score instead of looking at the changes in credits
+        # It should be a lot more consistent
+        # won't be worked on for a while tho since theres little need
+        pass
 
     def beginWinLossDetection(self):
         if self.WinLossDetection is None or not self.WinLossDetection.is_alive():

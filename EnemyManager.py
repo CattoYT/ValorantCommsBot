@@ -9,6 +9,13 @@ from mss.windows import MSS as mss
 from PIL import Image
 import speaker as spk
 
+
+# The current dilemma with this module is that Valorant already has something like it whith the agent callouts
+# This isn't really needed tbh
+# However, it is cool so I'll leave this module as deprecated.
+
+
+
 class EnemyManager:
     def __init__(self, visualize=False):
         self.visualize = visualize
@@ -126,26 +133,38 @@ class EnemyManager:
                         self.model.export(dynamic=True, format="engine")
                         os.remove(modelPath[:-3] + ".onnx")
                         self.model = ultralytics.YOLO(modelPath[:-3] + ".engine")
-
-        #while not self.stopEvent.is_set():
-        while True:
+        cooldown = 0
+        while not self.stopEvent.is_set():
+        #while True:
             screenshot = detectors.capture_screenshot()
             results = self.model(screenshot, conf=0.70, device="0")
 
             detections = results[0].boxes
             class_ids = detections.cls.cpu().numpy() if detections.cls is not None else [] # thanks copilot
-            total_objects = len(class_ids)
+            detected = 0
+            for class_id in class_ids:
+                if class_id == 1.0: # check if the class id is actually an enemy
+                    detected += 1
 
-            self.enemyCount.value = total_objects
-
-            print("Total enemies: " + str(total_objects))
-            if self.enemyCount.value > 1:
-                spk.sayVoice("voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
-
+            if detected >= 1:
+                if time.time() - cooldown > 30:  # 30 seconds
+                    cooldown = time.time()
+                    spk.sayVoice("voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
 
 
 
 
+    def beginYoloV8Detection(self):
+
+
+        if self.monitorProcess is None or not self.monitorProcess.is_alive():
+            self.monitorProcess = Process(target=self.yoloV8Detection)
+            self.monitorProcess.daemon = True
+            self.monitorProcess.start()
+            return
+
+
+        return
 
 
 

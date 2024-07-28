@@ -22,7 +22,6 @@ class RPManager:
         }.get(self.currentPhaseState.value, "Unknown")
 
     def checkPhase(self):
-        print("Checking phase")
         region_x = 807
         region_y = 161
         region_width = 315

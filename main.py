@@ -4,6 +4,7 @@ from multiprocessing import Process
 
 
 import detectors
+from WinLossManager import WLManager
 
 from detectors import getPlayerHealth, getPlayerShield
 
@@ -32,12 +33,19 @@ global isAlreadyDead
 
 def main():
     HealthMgr = HealthManager()
+
     KillsMgr = KillsManager()
     KillsMgr.beginMonitoring()
+
     #EnemyMgr = EnemyManager(visualize=True)
     #EnemyMgr.beginEnemyDetection()
-    RPMgr = RPManager()
 
+    #innit round phase detector
+    #RPMgr = RPManager()
+    #RPMgr.beginPhaseDetection()
+    #innit win loss detection
+    WLMgr = WLManager()
+    WLMgr = WLMgr.beginWinLossDetection()
 
 
     while True:
@@ -49,6 +57,9 @@ def main():
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
         print("Kills: " + str(KillsMgr.killcount))
+        #print("Phase: " + str(RPMgr.currentPhase))
+        print("Last Round: " + str(WLMgr.previousRoundResult))
+
         #print("Enemies: " + str(EnemyMgr.enemyCount))
         print("")
         isAlive = detectors.getAlive()
