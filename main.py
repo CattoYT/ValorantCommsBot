@@ -45,7 +45,7 @@ def main():
     #RPMgr.beginPhaseDetection()
     #innit win loss detection
     WLMgr = WLManager()
-    WLMgr = WLMgr.beginWinLossDetection()
+    WLMgr.beginWinLossDetection()
 
 
     while True:
@@ -56,9 +56,9 @@ def main():
 
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
-        print("Kills: " + str(KillsMgr.killcount))
+        print("Kills: " + str(KillsMgr.killcount)) #broken
         #print("Phase: " + str(RPMgr.currentPhase))
-        print("Last Round: " + str(WLMgr.previousRoundResult))
+        print("Last Round: " + str(WLMgr.previousRoundResult)) #partially broken
 
         #print("Enemies: " + str(EnemyMgr.enemyCount))
         print("")

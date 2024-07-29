@@ -24,27 +24,28 @@ class WLManager():
         # THIS DOES CHANGE
         region_x = 1637
         region_y = 856
-        region_width = 150
+        region_width = 160
         region_height = 180
 
         while True:
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
-            text = pytesseract.image_to_string(screenshot, config=r'--psm 4'
-                                                                  r'-c tessedit_char_whitelist="BUY PHASE" ')
+            text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "')
 
             if text:
                 screenshot.save("yes.png")
                 print(text)
             else:
-                print("No text detected")
+                #print("No text detected")
                 time.sleep(6)
-            if "Round Loss" in text:
+                continue
+
+            if "Loss" in text:
                 spk.sayVoice(spk.getRandomFile(['loss', 'new-round']))
-                self.previousRoundResultState = "loss"
+                self.previousRoundResultState.value = 0
                 time.sleep(50)
-            elif "Round Win" in text:
-                self.previousRoundResultState = "Win"
+            elif "Win" in text:
+                self.previousRoundResultState.value = 1
                 spk.sayVoice(spk.getRandomFile(['victory', 'new-round']))
                 time.sleep(50)
 
@@ -67,4 +68,4 @@ if __name__ == "__main__":
     wl.beginWinLossDetection()
     while True:
         print(wl.previousRoundResult)
-        time.sleep(1)
+        time.sleep(3)
