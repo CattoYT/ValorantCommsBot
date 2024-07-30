@@ -30,6 +30,10 @@ global isAlreadyDead
 
 
 # TODO: STOP COPYPASTING THE SCREENSHOT REGIONS INTO EVERY METHOD LMAOOOO
+# TODO: Refactor all the managers to use inheritance so that its a lot cleaner
+# TODO: Reorganise the managers so that it is easier to start each one
+# TODO: GUI (Low prio)
+# TODO: Finish Yolo Implementation
 
 def main():
     HealthMgr = HealthManager()
@@ -44,21 +48,22 @@ def main():
     #RPMgr = RPManager()
     #RPMgr.beginPhaseDetection()
     #innit win loss detection
-    WLMgr = WLManager()
-    WLMgr.beginWinLossDetection()
+    #WLMgr = WLManager()
+    #WLMgr.beginWinLossDetection()
 
 
     while True:
 
         frame = detectors.capture_screenshot()
+        # for these two lines, I have no idea if I want to separate them from the main thread or not.
         HealthMgr.updateHP(getPlayerHealth(frame) or None)
         HealthMgr.updateShield(getPlayerShield(frame) or None)
 
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
-        print("Kills: " + str(KillsMgr.killcount)) #broken
+        print("Kills: " + str(KillsMgr.killcount))
         #print("Phase: " + str(RPMgr.currentPhase))
-        print("Last Round: " + str(WLMgr.previousRoundResult)) #partially broken
+        #print("Last Round: " + str(WLMgr.previousRoundResult))
 
         #print("Enemies: " + str(EnemyMgr.enemyCount))
         print("")

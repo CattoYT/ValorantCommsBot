@@ -1,7 +1,7 @@
 import random
 import speaker as spk
 import detectors
-from multiprocessing import Process, Event
+from multiprocessing import Process, Event, Value
 import time
 
 # Kill management
@@ -16,18 +16,21 @@ class KillsManager:
 
         self.stopEvent = Event()
         self.monitorProcess = None
-        self.killcount = 0
+        self.killcountV = Value('i', 0) # I swear i keep forgetting to do this
 
 
+    @property
+    def killcount(self):
+        return self.killcountV.value
 
     def monitorKills(self):
         while not self.stopEvent.is_set():
-            self.killcount = detectors.getKills(me=True)
+            self.killcountV.value = detectors.getKills(me=True)
 
 
 
             #for i in range(killcount):
-            if self.killcount > 0: # temporary change because I want to eventually have a system to tell when the kills happened and be able to not say a voice line if it is too close together so im not spamming vc
+            if self.killcountV.value > 0: # temporary change because I want to eventually have a system to tell when the kills happened and be able to not say a voice line if it is too close together so im not spamming vc
                 #print('killcount = ' + str(self.killcount)) # this can stay commented for now since rng is guaranteed
                 if random.randint(1, 10) > 0:
                     #print('monitorKills - succeeded rng (guaranteed rn)')
@@ -50,3 +53,10 @@ class KillsManager:
         self.stopEvent.set()
         if self.monitorProcess is not None:
             self.monitorProcess.join()
+
+if __name__ == "__main__":
+    km = KillsManager()
+    km.beginMonitoring()
+    while True:
+        print(km.killcount)
+        time.sleep(1)

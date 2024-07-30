@@ -51,17 +51,11 @@ class EnemyManager:
             # box code genned from copilot
             # Define the box coordinates (x_min, y_min, x_max, y_max)
 
-            img_np = np.array(sct_img)
-            height, width, _ = img_np.shape
-            box_coords = (width - 70, 93, width - 30, 400)  # (x_min, y_min, x_max, y_max)
-
-            # Set the specified area to black
-            img_np[box_coords[1]:box_coords[3], box_coords[0]:box_coords[2]] = [0, 0, 0]
-            img = Image.fromarray(img_np)
 
 
 
-            results = self.model(img)
+
+            results = self.model(self.overlayCensor(sct_img))
 
             self.enemyCount = 0
 
@@ -98,6 +92,16 @@ class EnemyManager:
                 print("Speaking")
 
             previousCount = self.enemyCount
+
+    def overlayCensor(self, img):
+        img_np = np.array(img)
+        height, width, _ = img_np.shape
+        box_coords = (width - 70, 93, width - 30, 400)  # (x_min, y_min, x_max, y_max)
+
+        # Set the specified area to black
+        img_np[box_coords[1]:box_coords[3], box_coords[0]:box_coords[2]] = [0, 0, 0]
+        img = Image.fromarray(img_np)
+        return img
 
     def recordScreen(self): # will implement later
 
@@ -137,7 +141,7 @@ class EnemyManager:
         while not self.stopEvent.is_set():
         #while True:
             screenshot = detectors.capture_screenshot()
-            results = self.model(screenshot, conf=0.70, device="0")
+            results = self.model(self.overlayCensor(screenshot), conf=0.70, device="0")
 
             detections = results[0].boxes
             class_ids = detections.cls.cpu().numpy() if detections.cls is not None else [] # thanks copilot
