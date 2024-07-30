@@ -129,7 +129,7 @@ def getKills(me=True): # me is cuz i sometimes use name hider lol
 
 
 def getAlive():
-    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.7):
+    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.6): # might need to retake this image, since it isn't too consistent
         return False
     else:
         return True

@@ -28,8 +28,6 @@ class HealthManager:
         elif int(self.health) > 50:
             self.isAlreadyLow = False
 
-        elif not self.health:
-            print("MISSING HEALTH")
 
 
     def updateShield(self, shield):

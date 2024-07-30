@@ -119,6 +119,9 @@ class EnemyManager:
 
     def yoloV8Detection(self):
         # This needs to run as fast as possible cuz valorant is fast asf
+        import logging
+
+        # Suppress logging output
 
         if self.model == None:
             import ultralytics
@@ -138,6 +141,7 @@ class EnemyManager:
                         os.remove(modelPath[:-3] + ".onnx")
                         self.model = ultralytics.YOLO(modelPath[:-3] + ".engine")
         cooldown = 0
+        logging.getLogger('ultralytics').setLevel(logging.WARNING) #chatgpt'd because the documentation is kinda shit
         while not self.stopEvent.is_set():
         #while True:
             screenshot = detectors.capture_screenshot()

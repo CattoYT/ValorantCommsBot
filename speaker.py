@@ -6,25 +6,34 @@ import keyboard
 import os
 import random
 import time
-
+import requests
 
 from Modules.utils import get_file_duration, find_device_id
 
-play_lock = threading.Condition()
-def play_audio(file_path, volume):
+play_lock = threading.Condition() # this will work fine for 3.13, however, I can't use this rn because multiprocessing will dupilcate the lock :/
 
+def play_audio(file_path):
+    # see MultiprocessingIsAMistake.py for explanation
+    try:
+        requests.get("127.0.0.1:3000?scenario="+file_path)
+    except:
+        pass
 
-    play_lock.acquire()
-    data, fs = sf.read(file_path, dtype='float32')
-
-    #keyboard.press('v')
-    #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
-    sd.play(data, fs)
-    sd.wait()
-    time.sleep(0.1)
-    #keyboard.release('v')
-
-    play_lock.release()
+# def play_audio(file_path, volume=0.9):
+#
+#
+#     play_lock.acquire()
+#     data, fs = sf.read(file_path, dtype='float32')
+#
+#     data = data * volume
+#     #keyboard.press('v')
+#     #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
+#     sd.play(data, fs)
+#     sd.wait()
+#     time.sleep(0.1)
+#     #keyboard.release('v')
+#
+#     play_lock.release()
 
 def sayVoice(file_path):
     # Create a new thread to play the audio
