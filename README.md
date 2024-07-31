@@ -3,9 +3,11 @@
 A valorant bot that can be used to automate communications using voice clips from different games.
 This was written because I was bored + inspiration from SociallyIneptWeeb
 
+This bot was partially written because I hate talking in VC with random people, so why not spend half a year making a program to do it for me?
+I guess other socially inept (haha) people can use it too, so win win?
 
-GO TO THE [REWRITE](https://github.com/CattoYT/ValorantCommsBot/tree/rewrite) BRANCH ITS A LOT MORE UPDATED!!!
-
+As of writing, Python 3.13 isn't out, but will be within the year. I plan on migrating quickly due to the lack of the GIL, which will significantly improve this app's performance currently.
+This is mainly to clean up the shitty multiprcessing code i've written, and will hopefully be faster when starting up different modules such as the EnemyManager. When this happens, it will definitely take a massive refactor tho lol
 
 # Setup:
 
@@ -14,14 +16,11 @@ Run the following (ideally in a venv):
 pip install -r requirements.txt
 ```
 
+EnemyManager currently makes use of [YOLOv5](https://github.com/ultralytics/yolov5) models from [Leaf48](https://github.com/Leaf48/YOLO-Models-For-Valorant/tree/main/Yolov5/YOLOv5s)
+Please move them into this root folder and make sure the name matches in the torch.hub.load call in EnemyManager.py.
+This will be a thing until my model finishes training and I will be providing that as default in this repo!
 
-# Reminders
-
-Teammate kills are detected by searching for the green pixel at certain coords
-
-My kills are located by searching for killname.png in the top right corner of the screen
-
-My alive status is checked by looking for the combat report (NEEDS CHANGE)
+Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager and RPManager in main.py for a somewhat decent (yet small) release.
 
 
 ## Acknowledgements
@@ -34,9 +33,11 @@ My alive status is checked by looking for the combat report (NEEDS CHANGE)
 
 - [OpenCV](https://opencv.org/)
   - License: Apache License 2.0
-  - 
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
+
+Snake case stuff is often from AI, but not always, so thanks github copilot <3
+
 
 # Disclaimer + Legal Stuff
 

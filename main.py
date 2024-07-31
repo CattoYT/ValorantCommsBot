@@ -1,131 +1,91 @@
-import random
 import threading
-
 import time
-import speaker as spk
+from multiprocessing import Process
+
+
 import detectors
+from WinLossManager import WLManager
 
-from detectors import getAlive, getPlayerHealth, getPlayerShield
+from detectors import getPlayerHealth, getPlayerShield
 
+from HealthManager import HealthManager
+
+from KillsManager import KillsManager
+
+from EnemyManager import EnemyManager
+
+from RoundPhaseManager import RPManager
+
+
+
+# il eventually fix this cuz i really dont want to have a billion global vars xd
 global frame
+global isAlreadyLow
+global isAlive
+global isTeammateDead
+global isAlreadyDead
+
+# for deciding what goes in main loop, it should be anything that can run on a 5s cooldown. Anything outside of that probably should be in its own file with its own manager
+#python is also way too slow for this lmao
+
+
+# TODO: STOP COPYPASTING THE SCREENSHOT REGIONS INTO EVERY METHOD LMAOOOO
+# TODO: Refactor all the managers to use inheritance so that its a lot cleaner
+# TODO: Reorganise the managers so that it is easier to start each one
+# TODO: GUI (Low prio)
+# TODO: Finish Yolo Implementation
+# TODO: prevent double talking
+# TODO: Improve performance in YOLO or make a colab server for it
+
 def main():
-    global healthIsLow
-    global isAlive
-    global isTeammateDead
+    HealthMgr = HealthManager()
 
+    KillsMgr = KillsManager()
+    KillsMgr.beginMonitoring()
 
-    healthIsLow = False
-    isAlive = True
-    isTeammateDead = False
-    alreadyDead = False
+    EnemyMgr = EnemyManager(visualize=True)
+    EnemyMgr.beginYoloV8Detection()
+
+    #innit round phase detector
+    RPMgr = RPManager()
+    RPMgr.beginPhaseDetection()
+    #innit win loss detection
+    WLMgr = WLManager()
+    WLMgr.beginWinLossDetection()
+
 
     while True:
-        time.sleep(5)
+
         frame = detectors.capture_screenshot()
-        print('\n')
-        isAlive = getAlive()
-        print('Alive: ' + str(isAlive))
+        # for these two lines, I have no idea if I want to separate them from the main thread or not.
+
+        #the main advantage of doing this in the main thread is that the screenshot gets to be passed within here and doesnt get taken inside each of the managers
+        HealthMgr.updateHP(getPlayerHealth(frame) or None)
+        HealthMgr.updateShield(getPlayerShield(frame) or None)
+
+        print("Health: " + str(HealthMgr.health))
+        print("Shield: " + str(HealthMgr.shield))
+        print("Kills: " + str(KillsMgr.killcount)) #partially working
+        print("Phase: " + str(RPMgr.currentPhase)) #working
+        print("Last Round: " + str(WLMgr.previousRoundResult)) #working
+
+        #print("Enemies: " + str(EnemyMgr.enemyCount)) # this line isn't really needed tbh
+        print("")
+        isAlive = detectors.getAlive()
+        if HealthMgr.health and not isAlive:
+            isAlive = True  # override because holy shit its not consistent
+        HealthMgr.updateAlive(isAlive)
 
 
-        if isAlive == False and alreadyDead == False:
-            print('dead')
-            alreadyDead = True
-            spk.sayVoice(spk.getRandomFile('death', 'mio'))
-        elif isAlive == True and alreadyDead == True:
-            alreadyDead = False
 
 
-        health = getPlayerHealth(frame)
-        shield = getPlayerShield(frame)
-
-        try:
-            int(health)
-        except ValueError:
-            health = None
-        try:
-            int(shield)
-        except ValueError:
-            shield = None
-
-        if health and isAlive:
-            print("Health: " + str(health))
-
-            if int(health) > 70:
-                if healthIsLow == True:
-                    healthIsLow = False
-                    spk.sayVoice(spk.getRandomFile('health-recovered', 'mio'))
-                    healthIsLow = False
-
-        if health:
-            if int(health) <= 70 and healthIsLow == False:
-                healthIsLow = True
-                print("Attempting to speak...")
+        time.sleep(1)
 
 
-                spk.sayVoice(spk.getRandomFile('low-hp', 'mio'))
-        else:
-            print("Failed to get health!")
-
-        if shield:
-            print("Shield: " + shield)
-        else:
-            print("Failed to get shield!")
-
-        # TODO: put this in a new thread
-        #if random.randint(1, 10) > 8:
-        #    spk.sayVoice(spk.getRandomVoiceLine('encouragement', 'mio'))
-
-
-def monitorKills():
-    global frame
-    while True:
-        time.sleep(5)
-        frame = detectors.capture_screenshot()
-        isTeammateDead = detectors.getDeaths(frame)
-        print('Dead Teammates: ' + str(isTeammateDead))
-
-
-        killcount = detectors.getKills()
-        print('killcount = ' + str(killcount))
-
-        for i in range(killcount):
-            if random.randint(1, 10) > 0:
-                print('monitorKills - succeeded rng (guaranteed rn)')
-                spk.sayVoice(spk.getRandomFile('encouragement', 'mio'))
-            else:
-                print('monitorKills - failed rng')
-        killcount = 0
-        if isTeammateDead and not isAlive:
-            spk.sayVoice(spk.getRandomFile('teammate-death', 'mio'))
-            print("Shit teammates")
 
 
 
 if __name__ == '__main__':
-    # TODO: Fix this bullshit + make detection for null or >50 shield
-    # TODO: Rewrite this entire fuckin file its so bad
-    # TODO: maybe integrate rvc or voice synthesis using some textgen + voice gen figure it out later lol
-
-
-
-
-    threading.Thread(target=main).start()
-    print('Started main bot!')
-    threading.Thread(target=monitorKills).start()
-    print('Started Teammate detector!')
-
-    #CHECKLIST:
-
-    # Teammate death detection - sometimes doesnt work if the killer name is too short
-    # My death detection - Fine
-    # Health - buggy, cant do shit about it
-    # Shield - same
-    # Alive status - perfect <3
-    # my kills - seem fine?
-    # round detector - NOT IMPLEMENTED
-    # Enemy Detector - semi implemented
-
-
-
-# BUGS
-# - Plays loww
+    import MultiprocessingIsAMistake
+    Process(target=MultiprocessingIsAMistake.start).start()
+    main()
