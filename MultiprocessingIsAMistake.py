@@ -15,6 +15,8 @@ someoneistalking = False
 # When I die, God is going to ask what the fuck happened here
 # Im not even religious
 # This is a mistake.
+import sounddevice as sd
+import soundfile as sf
 @app.route('/')
 def IMFUCKINGTALKING():
     global someoneistalking
@@ -28,7 +30,12 @@ def IMFUCKINGTALKING():
     with lock:
 
         someoneistalking = True
-        speaker.play_audio(speaker.getRandomFile(str(scenario)))
+        data, fs = sf.read(speaker.getRandomFile(str(scenario)), dtype='float32')
+        data = data * 0.4
+        #keyboard.press('v')
+        #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
+        sd.play(data, fs)
+        sd.wait()
         someoneistalking = False
         return jsonify({'status': 'success'}), 200
 
@@ -36,5 +43,5 @@ def IMFUCKINGTALKING():
 
     return jsonify({'status': 'busy'}), 429
 
-if __name__ =="__main__":
+def start():
     app.run()

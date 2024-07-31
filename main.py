@@ -35,6 +35,7 @@ global isAlreadyDead
 # TODO: GUI (Low prio)
 # TODO: Finish Yolo Implementation
 # TODO: prevent double talking
+# TODO: Improve performance in YOLO or make a colab server for it
 
 def main():
     HealthMgr = HealthManager()
@@ -85,4 +86,6 @@ def main():
 
 
 if __name__ == '__main__':
+    import MultiprocessingIsAMistake
+    Process(target=MultiprocessingIsAMistake.start).start()
     main()

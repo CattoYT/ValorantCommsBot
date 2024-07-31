@@ -129,7 +129,18 @@ def getKills(me=True): # me is cuz i sometimes use name hider lol
 
 
 def getAlive():
-    if pyautogui.locateOnScreen('debugging-images/COMBAT_REPORT2.png', confidence=0.6): # might need to retake this image, since it isn't too consistent
+    #the images used here LITERALLY JUST GOT CHANGED IN THE LAST PATCH LMAO
+    #The new image uses pyautogui instead of pytesseract cuz the position changes and i really don't care enough
+
+
+    region_x = 1611   # X-coordinate of the top-left corner of the region
+    region_y = 191  # Y-coordinate of the top-left corner of the region
+    region_width = 204 # Width of the region
+    region_height = 391 # Height of the region
+
+    if pyautogui.locateOnScreen('debugging-images/CombatReport.png', confidence=0.6,
+                region=(region_x, region_y, region_width, region_height)
+                                ):
         return False
     else:
         return True

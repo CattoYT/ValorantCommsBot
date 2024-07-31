@@ -38,7 +38,7 @@ def play_audio(file_path):
 def sayVoice(file_path):
     # Create a new thread to play the audio
 
-    audio_thread = threading.Thread(target=play_audio, args=(file_path, 0.4))
+    audio_thread = threading.Thread(target=play_audio, args=(file_path))
     audio_thread.start()
 
 def getRandomVoiceLine(scenario, va):
