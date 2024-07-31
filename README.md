@@ -6,11 +6,6 @@ This was written because I was bored + inspiration from SociallyIneptWeeb
 This bot was partially written because I hate talking in VC with random people, so why not spend half a year making a program to do it for me?
 I guess other socially inept (haha) people can use it too, so win win?
 
-
-A few of the events that are monitored in this bot are not actually used. 
-If anyone wants to submit a PR to have stuff done with the events then please do! 
-
-
 As of writing, Python 3.13 isn't out, but will be within the year. I plan on migrating quickly due to the lack of the GIL, which will significantly improve this app's performance currently.
 This is mainly to clean up the shitty multiprcessing code i've written, and will hopefully be faster when starting up different modules such as the EnemyManager. When this happens, it will definitely take a massive refactor tho lol
 
