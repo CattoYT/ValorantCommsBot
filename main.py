@@ -25,36 +25,38 @@ global isAlreadyDead
 
 
 # TODO: STOP COPYPASTING THE SCREENSHOT REGIONS INTO EVERY METHOD LMAOOOO
-# TODO: Refactor all the managers to use inheritance so that its a lot cleaner
-# TODO: Reorganise the managers so that it is easier to start each one
+# TODO: Add a chatbot to the chat or pass all the game events to the llm and let it speak instead
+# TODO: Create am overlay for molly lineups, and game info (this is turning into an overwolf app xd)
 # TODO: GUI (Low prio)
 # TODO: Finish Yolo Implementation
-# TODO: prevent double talking
 # TODO: Improve performance in YOLO or make a colab server for it
 #  (Server is here: https://colab.research.google.com/drive/1FFb7bS8LVFH1V9DwMC_x_ZFO6M9Z-8JN?authuser=4#scrollTo=UitBtdPf03sw) and in yolo_inference.ipynb
 
+def initModules():
+    global KillsMgr
+    global RPMgr
+    global WLMgr
+
+    # copilot generated because I couldn't think of a cleaner way of adding it
+    activeModules = {
+        "KillsMgr": KillsManager,
+        "RPMgr": RPManager,
+        "WLMgr": WLManager,
+    }
+
+    for name, cls in activeModules.items():
+        globals()[name] = cls()
+        globals()[name].beginDetection()
+
+
 def main():
     HealthMgr = HealthManager()
-
-    KillsMgr = KillsManager()
-    KillsMgr.beginMonitoring()
-
-    #EnemyMgr = EnemyManager(visualize=True)
-    #EnemyMgr.beginYoloV8Detection()
-
-    #innit round phase detector
-    RPMgr = RPManager()
-    RPMgr.beginDetection()
-    # #innit win loss detection
-    WLMgr = WLManager()
-    WLMgr.beginWinLossDetection()
-
+    initModules()
 
     while True:
 
         frame = detectors.capture_screenshot()
         # for these two lines, I have no idea if I want to separate them from the main thread or not.
-
         #the main advantage of doing this in the main thread is that the screenshot gets to be passed within here and doesnt get taken inside each of the managers
         HealthMgr.updateHP(getPlayerHealth(frame) or None)
         HealthMgr.updateShield(getPlayerShield(frame) or None)

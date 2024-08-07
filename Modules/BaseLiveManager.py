@@ -6,7 +6,6 @@ class BaseLiveManager():
         self.liveProcess = None
         self.multiprocessingProcess = None
         self.stopEvent = Event()
-        pass
 
 
     def beginDetection(self):

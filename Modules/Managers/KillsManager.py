@@ -17,8 +17,8 @@ from Modules.BaseLiveManager import BaseLiveManager
 class KillsManager(BaseLiveManager):
     def __init__(self):
         super().__init__()
-        self.liveProcess = self.monitorKills()
         self.killcountV = Value('i', 0) # I swear i keep forgetting to do this
+        self.liveProcess = self.monitorKills
 
 
     @property

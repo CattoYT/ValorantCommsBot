@@ -120,9 +120,10 @@ def getKills(me=True): # me is cuz i sometimes use name hider lol
     region_height = 370 # Height of the region
     if me:
 
-        matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
+        matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', grayscale=True, confidence=0.8, region=(region_x, region_y, region_width, region_height))
     else:
-        matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', confidence=0.8, region=(region_x, region_y, region_width, region_height))
+        # fun easter egg about this image, it was taken on Breeze T side spawn and the rock texture keeps messing up detections i think
+        matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', grayscale=True,confidence=0.8, region=(region_x, region_y, region_width, region_height))
 
     return len(list(matches))
 
