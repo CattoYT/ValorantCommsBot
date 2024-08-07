@@ -4,12 +4,14 @@ from multiprocessing import Process, Value
 from pytesseract import pytesseract
 import speaker as spk
 import detectors
+from Modules.BaseLiveManager import BaseLiveManager
 
 
-class WLManager():
+class WLManager(BaseLiveManager):
     def __init__(self):
+        super().__init__()
+        self.liveProcess = self.monitorWinLoss
         self.previousRoundResultState = Value('i', 0)
-        self.WinLossDetection = None
 
     @property
     def previousRoundResult(self):
@@ -27,7 +29,7 @@ class WLManager():
         region_width = 160
         region_height = 180
 
-        while True:
+        while not self.stopEvent.is_set():
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
             text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "')
@@ -55,11 +57,7 @@ class WLManager():
         # won't be worked on for a while tho since theres little need
         pass
 
-    def beginWinLossDetection(self):
-        if self.WinLossDetection is None or not self.WinLossDetection.is_alive():
-            self.WinLossDetection = Process(target=self.monitorWinLoss)
-            self.WinLossDetection.daemon = True
-            self.WinLossDetection.start()
+
 
 
 

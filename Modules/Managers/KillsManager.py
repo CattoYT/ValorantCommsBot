@@ -4,6 +4,9 @@ import detectors
 from multiprocessing import Process, Event, Value
 import time
 
+from Modules.BaseLiveManager import BaseLiveManager
+
+
 # Kill management
 
 # this should be pushed into a different thread because it needs to run every 5 seconds. This is a fixed
@@ -11,11 +14,10 @@ import time
 
 
 
-class KillsManager:
+class KillsManager(BaseLiveManager):
     def __init__(self):
-
-        self.stopEvent = Event()
-        self.monitorProcess = None
+        super().__init__()
+        self.liveProcess = self.monitorKills()
         self.killcountV = Value('i', 0) # I swear i keep forgetting to do this
 
 
@@ -42,21 +44,9 @@ class KillsManager:
 
 
 
-    def beginMonitoring(self):
-        if self.monitorProcess is None or not self.monitorProcess.is_alive():
-            self.monitorProcess = Process(target=self.monitorKills)
-            self.monitorProcess.start()
-
-
-    # thanks copilot for the events stuff
-    def stopMonitoring(self):
-        self.stopEvent.set()
-        if self.monitorProcess is not None:
-            self.monitorProcess.join()
-
 if __name__ == "__main__":
     km = KillsManager()
     km.beginMonitoring()
     while True:
         print(km.killcount)
-        time.sleep(1)
+        time.sleep(5)

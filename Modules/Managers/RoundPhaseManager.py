@@ -8,11 +8,14 @@ from pytesseract import pytesseract
 
 import speaker as spk
 import detectors
+from Modules.BaseLiveManager import BaseLiveManager
 
-class RPManager:
+
+class RPManager(BaseLiveManager):
     def __init__(self):
+        super().__init__()
+        self.liveProcess = self.checkPhase
         self.currentPhaseState = Value('i', 0)
-        self.PhaseDetectionProcess = None
 
     @property
     def currentPhase(self): # written by copilot because damn i don't understand lambdas but eh cool
@@ -27,7 +30,7 @@ class RPManager:
         region_width = 315
         region_height = 83
 
-        while True:
+        while not self.stopEvent.is_set():
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
             text = pytesseract.image_to_string(screenshot, config=r'--psm 7 '
@@ -51,18 +54,9 @@ class RPManager:
 
 
 
-
-    def beginPhaseDetection(self):
-        if self.PhaseDetectionProcess is None or not self.PhaseDetectionProcess.is_alive():
-            self.PhaseDetectionProcess = Process(target=self.checkPhase)
-            self.PhaseDetectionProcess.daemon = True
-            self.PhaseDetectionProcess.start()
-
-
-
 if __name__ == '__main__':
     detector = RPManager()
-    detector.beginPhaseDetection()
+    detector.beginDetection()
     while True:
         print(detector.currentPhase)
         time.sleep(1)

@@ -157,7 +157,7 @@ class EnemyManager:
             if detected >= 1:
                 if time.time() - cooldown > 30:  # 30 seconds
                     cooldown = time.time()
-                    spk.sayVoice("voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
+                    spk.sayVoice("../../voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
 
 
 
@@ -176,7 +176,7 @@ class EnemyManager:
 
 
 
-    def beginEnemyDetection(self):
+    def beginDetection(self):
 
 
         if self.monitorProcess is None or not self.monitorProcess.is_alive():

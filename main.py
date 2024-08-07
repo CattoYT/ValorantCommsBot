@@ -1,20 +1,15 @@
-import threading
 import time
 from multiprocessing import Process
 
-
-import detectors
-from WinLossManager import WLManager
+from Modules.Managers.WinLossManager import WLManager
 
 from detectors import getPlayerHealth, getPlayerShield
 
-from HealthManager import HealthManager
+from Modules.Managers.HealthManager import HealthManager
 
-from KillsManager import KillsManager
+from Modules.Managers.KillsManager import KillsManager
 
-from EnemyManager import EnemyManager
-
-from RoundPhaseManager import RPManager
+from Modules.Managers.RoundPhaseManager import RPManager
 
 
 
@@ -36,6 +31,7 @@ global isAlreadyDead
 # TODO: Finish Yolo Implementation
 # TODO: prevent double talking
 # TODO: Improve performance in YOLO or make a colab server for it
+#  (Server is here: https://colab.research.google.com/drive/1FFb7bS8LVFH1V9DwMC_x_ZFO6M9Z-8JN?authuser=4#scrollTo=UitBtdPf03sw) and in yolo_inference.ipynb
 
 def main():
     HealthMgr = HealthManager()
@@ -43,13 +39,13 @@ def main():
     KillsMgr = KillsManager()
     KillsMgr.beginMonitoring()
 
-    EnemyMgr = EnemyManager(visualize=True)
-    EnemyMgr.beginYoloV8Detection()
+    #EnemyMgr = EnemyManager(visualize=True)
+    #EnemyMgr.beginYoloV8Detection()
 
     #innit round phase detector
     RPMgr = RPManager()
-    RPMgr.beginPhaseDetection()
-    #innit win loss detection
+    RPMgr.beginDetection()
+    # #innit win loss detection
     WLMgr = WLManager()
     WLMgr.beginWinLossDetection()
 
@@ -62,10 +58,10 @@ def main():
         #the main advantage of doing this in the main thread is that the screenshot gets to be passed within here and doesnt get taken inside each of the managers
         HealthMgr.updateHP(getPlayerHealth(frame) or None)
         HealthMgr.updateShield(getPlayerShield(frame) or None)
-
+        #
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
-        print("Kills: " + str(KillsMgr.killcount)) #partially working
+        print("Kills: " + str(KillsMgr.killcount)) #fixed
         print("Phase: " + str(RPMgr.currentPhase)) #working
         print("Last Round: " + str(WLMgr.previousRoundResult)) #working
 
@@ -86,6 +82,8 @@ def main():
 
 
 if __name__ == '__main__':
-    import MultiprocessingIsAMistake
+    from Modules import MultiprocessingIsAMistake
+    import detectors
+
     Process(target=MultiprocessingIsAMistake.start).start()
     main()
