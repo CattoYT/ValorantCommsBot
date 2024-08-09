@@ -9,6 +9,10 @@ I guess other socially inept (haha) people can use it too, so win win?
 As of writing, Python 3.13 isn't out, but will be within the year. I plan on migrating quickly due to the lack of the GIL, which will significantly improve this app's performance currently.
 This is mainly to clean up the shitty multiprcessing code i've written, and will hopefully be faster when starting up different modules such as the EnemyManager. When this happens, it will definitely take a massive refactor tho lol
 
+
+Fun note: Google colab doesn't seem to allow me to change the save directory when exporting ipynbs   
+A lot of ipynbs will be in the root directory for now, but they will be moved eventually (they wont probably)
+
 # Setup:
 
 Run the following (ideally in a venv):
@@ -20,12 +24,14 @@ EnemyManager currently makes use of [YOLOv5](https://github.com/ultralytics/yolo
 Please move them into this root folder and make sure the name matches in the torch.hub.load call in EnemyManager.py.
 This will be a thing until my model finishes training and I will be providing that as default in this repo!
 
-Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager and RPManager in main.py for a somewhat decent (yet small) release.
+Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager in main.py for a somewhat decent (yet small) release.
 
 
 ## Acknowledgements
 
 - [YOLOv5](https://github.com/ultralytics/yolov5) by Ultralytics
+  - License: AGPL v3.0
+- [YOLOv8](https://github.com/ultralytics/ultralytics) by Ultralytics
   - License: AGPL v3.0
 
 - [PyTorch](https://pytorch.org/)
@@ -33,6 +39,7 @@ Some redundant code will be present, so just comment it out if you don't want to
 
 - [OpenCV](https://opencv.org/)
   - License: Apache License 2.0
+
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) by Tesseract OCR
   - License: Apache License 2.0
 

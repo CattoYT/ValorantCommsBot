@@ -161,7 +161,7 @@ def checkEnemies():
     # probably going to try using template matching to see which image is most like the ones detected in each position. The first ones detected will be their proper position, since their position is offset when a teammate dies
     # When a teammate dies, iacan offset the corect position by the amount of teammates dead
     # images will be taken from https://github.com/deepsidh9/Live-Valorant-Overlay/tree/main/app/templates/agent_templates
-
+    # this really should be done in a faster language i don't want to play valorant at 2 fps
     for i in range(5):
 
 
