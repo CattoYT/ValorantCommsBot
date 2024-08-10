@@ -93,22 +93,23 @@ if __name__ == "__main__":
             print(f"{i.raw()}")
 
         if data[-1].raw() != lastMsg.raw():
-            print(data[-1].user)
+            #print(data[-1].user)
 
-            if data[-1].user == "kaenia":
-                continue
+            if data[-1].user == "kaenia" or data[-1].user == "Me" or data[-1].user == "iopi":
+                continue #these are my usernames cuz i dont want to talk to myself
+                # no schizo i hope
 
             response = requests.post("https://cheaply-caring-pup.ngrok-free.app/", json=data[-1].json())
 
             print(response.text)
             # untested, make sure my regular inputs are still processed
-            pydirectinput.press('enter')
-            pydirectinput.write(f"{response.text}")
-            pydirectinput.press('enter')
+            #pydirectinput.press('enter')
+            #pydirectinput.write(f"{response.text}")
+            #pydirectinput.press('enter')
 
             lastMsg = data[-1]
         else:
             print("No new messages")
 
 
-        time.sleep(1)
+        time.sleep(4.5)
