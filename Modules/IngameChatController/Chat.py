@@ -1,6 +1,35 @@
+import json
+
 import pytesseract
 import time
+
+import requests
+
 import detectors
+
+class ValorantChat:
+    def __init__(self, channel, user, line):
+        self.channel = channel
+        self.user = user
+        self.line = line
+
+    def Empty(self):
+        self.channel = ""
+        self.user = ""
+        self.line = ""
+
+    def json(self):
+        return json.dumps(
+            {
+                "channel": self.channel,
+                "user": self.user,
+                "line": self.line
+            }
+        )
+
+    def raw(self):
+        return f"({self.channel}) {self.user}{self.line}"
+
 
 
 def readChat():
@@ -40,7 +69,7 @@ def readChat():
                 user = user + char
         if not no:
 
-            data.append((channel, user, line))
+            data.append(ValorantChat(channel, user, line))
 
 
 
@@ -49,10 +78,37 @@ def readChat():
 
 # since this file returns a pretty nice data struct, and it seems computationally heavy, it might be agood idea to rewrite this one in a differnet language
 # I know that exposing rust to python is decently easy, so il research that
+
+import pydirectinput
+
 if __name__ == "__main__":
+    lastMsg = ValorantChat("", "", "")
     while True:
         data = readChat()
-        for i in data:
+        # Condition hell, not fixing it
+        if not data:
+            continue
 
-            print(f"({i[0]}) {i[1]}{i[2]}")
-        time.sleep(4.5)
+        for i in data:
+            print(f"{i.raw()}")
+
+        if data[-1].raw() != lastMsg.raw():
+            print(data[-1].user)
+
+            if data[-1].user == "kaenia":
+                continue
+
+            response = requests.post("https://cheaply-caring-pup.ngrok-free.app/", json=data[-1].json())
+
+            print(response.text)
+            # untested, make sure my regular inputs are still processed
+            pydirectinput.press('enter')
+            pydirectinput.write(f"{response.text}")
+            pydirectinput.press('enter')
+
+            lastMsg = data[-1]
+        else:
+            print("No new messages")
+
+
+        time.sleep(1)

@@ -7,7 +7,8 @@ lock = threading.Lock()
 someoneistalking = False
 
 # The explanation of this file is very painful.
-# I was playing a valorant match testing this, but i suffer from being too good at valorant, where multiple events would trigger the speaker
+# I was playing a valorant match testing this, but i suffer from being too good at valorant,
+# where multiple events would trigger the speaker
 # The speaker lock doesn't work because its dupilcated across multiprocessing instances
 # This means that there is no easy way to prevent multispeaking
 # My solution to this problem after hearing "i NeEd SoMe HeAlInG oVeR hErE" 5 tims at the same time was to
