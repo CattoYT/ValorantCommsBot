@@ -42,7 +42,7 @@ def readChat():
 
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
 
-    text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789():<>?!& "')
+    text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789():<>?!&- "')
 
     data = []
 
@@ -80,17 +80,20 @@ def readChat():
 # I know that exposing rust to python is decently easy, so il research that
 
 import pydirectinput
-
+import keyboard
 
 import re
 if __name__ == "__main__":
     lastMsg = ValorantChat("", "", "")
 
-
-
+    from Overlay import startSetup
+    startSetup()
+    time.sleep(1)  # Add a slight delay to ensure the overlay is initialized
+    from Overlay import worker  # Import after the setup is done
 
     while True:
         data = readChat()
+
         # Condition hell, not fixing it
         if not data:
             continue
@@ -110,14 +113,23 @@ if __name__ == "__main__":
             if "[HEALTHINDICATOR]" in response.text:
                 # regex to extract the numbers in response.text
                 # Find all numbers in the text
+
+                # TODO: fix the text updater tmr
                 numbers = re.findall(r'\d+', response.text)
                 if numbers:
+                    worker.update_label(0, str(numbers))  # Update the first label (index 0)
                     pass
+
+
+
                     #update_label(0, int(numbers[0]))  # Update the first label as an example
             else:
+                if "html" in response.text:
+                    print("Server is down")
+                    exit()
+
                 pydirectinput.press('enter')
-                pydirectinput.typewrite(f"{response.text}")
-                pydirectinput.press('enter')
+                #keyboard.write(f"{response.text}")
                 pydirectinput.press('enter') # this is a debug message, mainly just to ensure that hte message is not
 
 
