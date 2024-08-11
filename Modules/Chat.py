@@ -81,8 +81,14 @@ def readChat():
 
 import pydirectinput
 
+
+import re
 if __name__ == "__main__":
     lastMsg = ValorantChat("", "", "")
+
+
+
+
     while True:
         data = readChat()
         # Condition hell, not fixing it
@@ -95,17 +101,25 @@ if __name__ == "__main__":
         if data[-1].raw() != lastMsg.raw():
             #print(data[-1].user)
 
-            if data[-1].user == "kaenia" or data[-1].user == "Me" or data[-1].user == "iopi":
-                continue #these are my usernames cuz i dont want to talk to myself
-                # no schizo i hope
 
             response = requests.post("https://cheaply-caring-pup.ngrok-free.app/", json=data[-1].json())
 
             print(response.text)
             # untested, make sure my regular inputs are still processed
-            #pydirectinput.press('enter')
-            #pydirectinput.write(f"{response.text}")
-            #pydirectinput.press('enter')
+
+            if "[HEALTHINDICATOR]" in response.text:
+                # regex to extract the numbers in response.text
+                # Find all numbers in the text
+                numbers = re.findall(r'\d+', response.text)
+                if numbers:
+                    pass
+                    #update_label(0, int(numbers[0]))  # Update the first label as an example
+            else:
+                pydirectinput.press('enter')
+                pydirectinput.typewrite(f"{response.text}")
+                pydirectinput.press('enter')
+                pydirectinput.press('enter') # this is a debug message, mainly just to ensure that hte message is not
+
 
             lastMsg = data[-1]
         else:

@@ -9,6 +9,9 @@
 
 # TODO: ORGANISE THIS FILE
 import sys
+import threading
+from multiprocessing import Process
+
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget
 from PyQt6.QtGui import QPixmap, QPainter
 from PyQt6.QtCore import Qt
@@ -30,6 +33,10 @@ class HealthLabel:
 
     def updateLabel(self, value):
         self.label.setText(str(value))
+    def getLabel(self):
+        self.label.text()
+
+
 
 def drawIMG(overlay):
     # This image code can be used later ig for a lineup guide but will only be used for debugging for now. Thanks chatgpt for this section
@@ -49,7 +56,11 @@ def drawIMG(overlay):
     image_label.setGeometry(0, 0, transparent_pixmap.width(), transparent_pixmap.height())
 
 # Issue with this file, it causes MAD PERFORMANCE ISSUES
+
+global label1, label2, label3, label4, label5
 def setup_overlay():
+    global label1, label2, label3, label4, label5
+    global overlay
     app = QApplication(sys.argv)
 
     # Create the overlay widget to cover the entire screen
@@ -58,19 +69,20 @@ def setup_overlay():
         Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.X11BypassWindowManagerHint)
     overlay.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
     overlay.setGeometry(0, 0, 1536, 834)
-    drawIMG(overlay)
+    #drawIMG(overlay)
     label1 = HealthLabel(overlay, 150, 0)
     label2 = HealthLabel(overlay, 150, 1)
     label3 = HealthLabel(overlay, 150, 2)
     label4 = HealthLabel(overlay, 150, 3)
     label5 = HealthLabel(overlay, 150, 4)
 
-
-    overlay.show()
+    app.exec()
 
     sys.exit(app.exec())
 
+
+
+
+
 setup_overlay()
-
-
 
