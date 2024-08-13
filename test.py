@@ -58,6 +58,7 @@
 #         buffered = io.BytesIO()
 #         imagedata.save(buffered, format="JPEG")
 #
+
 #         img_bytes = buffered.getvalue()
 #
 #         # Send the byte array in a POST request
@@ -66,5 +67,31 @@
 #         print(response.text)
 # hello()
 
+
+
 import keyboard
-keyboard.write("aaaaaaaa")
+import time
+pressedKeys = []
+while True:
+
+
+    for key in keyboard._:
+        pressedKeys.append(key)
+        print(key)
+        keyboard.keyUp(key)
+    keyboard.press('enter')
+    keyboard.release('enter')
+    time.sleep(1)
+
+
+    keyboard.press('enter')
+    keyboard.release('enter')
+
+
+
+    print(pressedKeys)
+    for key in pressedKeys:
+
+        keyboard.keyDown(key)
+    time.sleep(5)
+

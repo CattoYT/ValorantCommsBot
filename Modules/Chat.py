@@ -91,6 +91,10 @@ if __name__ == "__main__":
     time.sleep(1)  # Add a slight delay to ensure the overlay is initialized
     from Overlay import worker  # Import after the setup is done
 
+    pressedKeys = set()
+
+
+
     while True:
         data = readChat()
 
@@ -127,11 +131,15 @@ if __name__ == "__main__":
                 if "html" in response.text:
                     print("Server is down")
                     exit()
+                pressedKeys.clear()
+                for key in keyboard._pressed_events:
+                    pressedKeys.add(key)
 
                 pydirectinput.press('enter')
-                #keyboard.write(f"{response.text}")
+                keyboard.write(f"{response.text}")
                 pydirectinput.press('enter') # this is a debug message, mainly just to ensure that hte message is not
-
+                for key in pressedKeys:
+                    pydirectinput.keyDown(key)
 
             lastMsg = data[-1]
         else:
