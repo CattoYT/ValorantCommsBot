@@ -66,32 +66,36 @@
 #
 #         print(response.text)
 # hello()
+#
+#
+#
+# import keyboard
+# import time
+# pressedKeys = []
+# while True:
+#
+#
+#     for key in keyboard._:
+#         pressedKeys.append(key)
+#         print(key)
+#         keyboard.keyUp(key)
+#     keyboard.press('enter')
+#     keyboard.release('enter')
+#     time.sleep(1)
+#
+#
+#     keyboard.press('enter')
+#     keyboard.release('enter')
+#
+#
+#
+#     print(pressedKeys)
+#     for key in pressedKeys:
+#
+#         keyboard.keyDown(key)
+#     time.sleep(5)
+#
 
+import RustModules
 
-
-import keyboard
-import time
-pressedKeys = []
-while True:
-
-
-    for key in keyboard._:
-        pressedKeys.append(key)
-        print(key)
-        keyboard.keyUp(key)
-    keyboard.press('enter')
-    keyboard.release('enter')
-    time.sleep(1)
-
-
-    keyboard.press('enter')
-    keyboard.release('enter')
-
-
-
-    print(pressedKeys)
-    for key in pressedKeys:
-
-        keyboard.keyDown(key)
-    time.sleep(5)
-
+print(RustModules.readChatTest)
