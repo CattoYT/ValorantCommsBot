@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 pyo3 = { version = "0.22.2", features = ["extension-module", "gil-refs"] }
 rusty-tesseract = "1.1.10"
+image = "0.25.2"
