@@ -1,2 +1,6 @@
-/venv/
-/yolov5/
+venv/*
+yolov5/*
+_pycache_/*
+.idea/*
+/Modules/RustModules/target/*
+/Modules/RustModules/.idea/*

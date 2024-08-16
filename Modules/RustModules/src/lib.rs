@@ -1,12 +1,15 @@
+#![allow(non_snake_case)] // I just don't care enough
+
 use std::collections::HashMap;
-use pyo3::prelude::*;
-use pyo3::types::{PyAny, PyBytes, PyList, PyTuple};
-use rusty_tesseract::{Args, Image};
+
 use image::load_from_memory;
+use pyo3::{prelude::*, types::{PyList, PyBytes}};
+use rusty_tesseract::{Args, Image};
 
 
 #[pyfunction]
-fn readChat(py: Python,img: &PyBytes) -> String {
+fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
+    
     let img = load_from_memory(img.as_bytes()).unwrap();
 
     img.save("test.png").unwrap();
@@ -22,24 +25,62 @@ fn readChat(py: Python,img: &PyBytes) -> String {
     };
     let fussyImg = Image::from_dynamic_image(&img).unwrap();
     let output = rusty_tesseract::image_to_string(&fussyImg, &my_args).unwrap();
+    let valorant_chat_class: &PyAny = py.import("Modules.Chat")?.getattr("ValorantChat").unwrap();
 
-    for i in 0..output.len() {
-        if output.contains("(Party) ") {
-            let channel = "(Party) ";
-            output.replace("(Party) ", "")
-        } //finish rest klater
+    let chatHistory = PyList::empty(py);
+
+
+    let mut channel = String::new();
+    let mut user: String = String::new();
+    let mut message: String = String::new();
+        //this is shitcode produced from me not knowing how to write rust
+    for i in output.lines() {
+        let mut line = i.to_string();
+
+        if line.contains("(Party) ") {
+            channel = "(Party) ".to_string();
+            line = line.replace("(Party) ", "");
+        }
+        else if line.contains("(Team) ") {
+            channel = "(Team) ".to_string();
+            line = line.replace("(Team) ", "");
+        }
+        else if line.contains("(All) ") {
+            channel = "(All) ".to_string();
+            line = line.replace("(All) ", "");
+        }
+        else {
+            continue;
+        }
+        
+
+        for char in i.chars() {
+            if char == ':' {
+                line = line.replace(&user.to_string(), "");
+                break;
+            }
+            else {
+                user.push(char);
+            }
+        }
+        chatHistory.append(valorant_chat_class.call1((channel.clone(), user.clone(), message.clone()))?)?;
+
+        println!("{}", i);
     }
+
 
     println!("The String output is: {:?}", output);
 
-    output
+    
+    Ok(chatHistory.into())
+
 
 }
 
 
 //The import and call1 was from ChatGPT, literally where are the docs for this lib
 #[pyfunction]
-fn readChatTest(py: Python) -> PyResult<(PyObject)> {
+fn readChatTest(py: Python) -> PyResult<PyObject> {
 
 
 

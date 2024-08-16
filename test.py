@@ -101,7 +101,8 @@ import RustModules
 from PIL import Image
 import io
 
-image = Image.open("img.png")
+image = Image.open("img_1.png")
 with io.BytesIO() as output:
     image.save(output, format="PNG")  # Save as PNG or another format supported by Rust
-    RustModules.readChat(output.getvalue())
+    listfun = RustModules.readChat(output.getvalue())
+    print(listfun)
