@@ -31,8 +31,12 @@ Some redundant code will be present, so just comment it out if you don't want to
 
 - [YOLOv5](https://github.com/ultralytics/yolov5) by Ultralytics
   - License: AGPL v3.0
+  
 - [YOLOv8](https://github.com/ultralytics/ultralytics) by Ultralytics
   - License: AGPL v3.0
+
+- [PyO3](https://github.com/PyO3/pyo3) 
+  - License: MIT License
 
 - [PyTorch](https://pytorch.org/)
   - License: BSD-3-Clause

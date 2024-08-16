@@ -36,6 +36,10 @@ def initModules():
     global KillsMgr
     global RPMgr
     global WLMgr
+    RecompileRust = False
+    if RecompileRust:
+        import CompileRust # Keep this as it is, cuz im pretty sure the code is executed regardless
+
 
     # copilot generated because I couldn't think of a cleaner way of adding it
     activeModules = {
@@ -52,6 +56,7 @@ def initModules():
 def main():
     HealthMgr = HealthManager()
     initModules()
+
 
     while True:
 

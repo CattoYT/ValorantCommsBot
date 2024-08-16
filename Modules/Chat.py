@@ -2,9 +2,9 @@ import json
 
 import pytesseract
 import time
-
+import io
 import requests
-
+import RustModules
 import detectors
 
 class ValorantChat:
@@ -28,7 +28,7 @@ class ValorantChat:
         )
 
     def raw(self):
-        return f"({self.channel}) {self.user}{self.line}"
+        return f"({self.channel}) {self.user}: {self.line}"
 
 
 
@@ -41,39 +41,42 @@ def readChat():
     region_height = 242  # Height of the region
 
     screenshot = screenshot.crop((region_x, region_y, region_x + region_width, region_y + region_height))
-
-    text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789():<>?!&- "')
-
-    data = []
-
-    for line in text.splitlines():
-        no = False
-        if "(Party)" in line:
-            line = line.replace("(Party) ", "")
-            channel = "Party"
-        elif "(All)" in line:
-            line = line.replace("(All) ", "")
-            channel = "All"
-        elif "(Team)" in line:
-            line = line.replace("(Team) ", "")
-            channel = "Team"
-        else:
-            no = True
-
-        user = ""
-        for char in line:
-            if char == ":":
-                line = line.replace(user, "")
-                break
-            else:
-                user = user + char
-        if not no:
-
-            data.append(ValorantChat(channel, user, line))
-
-
-
+    with io.BytesIO() as output:
+        screenshot.save(output, format="PNG")
+        data = RustModules.readChat(output.getvalue())
     return data
+    # text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789():<>?!&- "')
+    #
+    # data = []
+    #
+    # for line in text.splitlines():
+    #     no = False
+    #     if "(Party)" in line:
+    #         line = line.replace("(Party) ", "")
+    #         channel = "Party"
+    #     elif "(All)" in line:
+    #         line = line.replace("(All) ", "")
+    #         channel = "All"
+    #     elif "(Team)" in line:
+    #         line = line.replace("(Team) ", "")
+    #         channel = "Team"
+    #     else:
+    #         no = True
+    #
+    #     user = ""
+    #     for char in line:
+    #         if char == ":":
+    #             line = line.replace(user, "")
+    #             break
+    #         else:
+    #             user = user + char
+    #     if not no:
+    #
+    #         data.append(ValorantChat(channel, user, line))
+    #
+    #
+    #
+    # return data
 
 
 # since this file returns a pretty nice data struct, and it seems computationally heavy, it might be agood idea to rewrite this one in a differnet language
@@ -90,15 +93,15 @@ if __name__ == "__main__":
     startSetup()
     time.sleep(1)  # Add a slight delay to ensure the overlay is initialized
     from Overlay import worker  # Import after the setup is done
-
-    pressedKeys = set()
-
+    from Managers.RoundPhaseManager import RPManager
 
 
+    RPMgr = RPManager()
+    RPMgr.beginDetection()
     while True:
         data = readChat()
 
-        # Condition hell, not fixing it
+
         if not data:
             continue
 
@@ -111,36 +114,29 @@ if __name__ == "__main__":
 
             response = requests.post("https://cheaply-caring-pup.ngrok-free.app/", json=data[-1].json())
 
-            print(response.text)
+            print("LLM Response: " + response.text)
             # untested, make sure my regular inputs are still processed
 
             if "[HEALTHINDICATOR]" in response.text:
                 # regex to extract the numbers in response.text
                 # Find all numbers in the text
 
-                # TODO: fix the text updater tmr
                 numbers = re.findall(r'\d+', response.text)
                 if numbers:
+                    print("Updating label...")
                     worker.update_label(0, str(numbers))  # Update the first label (index 0)
                     pass
-
-
-
-                    #update_label(0, int(numbers[0]))  # Update the first label as an example
             else:
                 if "html" in response.text:
                     print("Server is down")
                     exit()
-                pressedKeys.clear()
-                for key in keyboard._pressed_events:
-                    pressedKeys.add(key)
 
-                pydirectinput.press('enter')
-                keyboard.write(f"{response.text}")
-                pydirectinput.press('enter') # this is a debug message, mainly just to ensure that hte message is not
-                for key in pressedKeys:
-                    pydirectinput.keyDown(key)
-
+                # This can be integrated with RPManager to only act as a chatbot during buy phase
+                if RPMgr.currentPhase == "Buy":
+                    print("Typing Message...")
+                    pydirectinput.press('enter')
+                    keyboard.write(f"{response.text}")
+                    pydirectinput.press('enter')
             lastMsg = data[-1]
         else:
             print("No new messages")

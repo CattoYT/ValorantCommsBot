@@ -29,7 +29,7 @@ class RPManager(BaseLiveManager):
         region_y = 161
         region_width = 315
         region_height = 83
-
+        # This scans the top overlay for the buy phase text (The big one with Round and which side you're on)
         while not self.stopEvent.is_set():
             sct_img = detectors.capture_screenshot()
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))

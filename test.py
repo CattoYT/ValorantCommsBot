@@ -103,6 +103,10 @@ import io
 
 image = Image.open("img_1.png")
 with io.BytesIO() as output:
-    image.save(output, format="PNG")  # Save as PNG or another format supported by Rust
+    image.save(output, format="PNG")
     listfun = RustModules.readChat(output.getvalue())
-    print(listfun)
+    for i in listfun:
+        print("Channel: " + i.channel)
+        print("user: " + i.user)
+        print("message: " + i.line)
+        print(i.raw())

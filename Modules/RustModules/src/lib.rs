@@ -6,15 +6,13 @@ use image::load_from_memory;
 use pyo3::{prelude::*, types::{PyList, PyBytes}};
 use rusty_tesseract::{Args, Image};
 
-
 #[pyfunction]
 fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
     
     let img = load_from_memory(img.as_bytes()).unwrap();
 
-    img.save("test.png").unwrap();
     let my_args = Args {
-        lang: "eng".to_string(),
+        lang: "eng".to_string(), 
         config_variables: HashMap::from([(
             "tessedit_char_whitelist".into(),
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789():<>?!&- ".into(),
@@ -24,52 +22,48 @@ fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
         oem: None,
     };
     let fussyImg = Image::from_dynamic_image(&img).unwrap();
-    let output = rusty_tesseract::image_to_string(&fussyImg, &my_args).unwrap();
+    let output = rusty_tesseract::image_to_string(&fussyImg, &my_args).unwrap(); //Compile with --release so that this doesn't put the command in the console
     let valorant_chat_class: &PyAny = py.import("Modules.Chat")?.getattr("ValorantChat").unwrap();
 
     let chatHistory = PyList::empty(py);
 
 
     let mut channel = String::new();
-    let mut user: String = String::new();
-    let mut message: String = String::new();
+
         //this is shitcode produced from me not knowing how to write rust
     for i in output.lines() {
         let mut line = i.to_string();
-
         if line.contains("(Party) ") {
-            channel = "(Party) ".to_string();
+            channel = "Party".to_string();
             line = line.replace("(Party) ", "");
         }
         else if line.contains("(Team) ") {
-            channel = "(Team) ".to_string();
+            channel = "Team".to_string();
             line = line.replace("(Team) ", "");
         }
         else if line.contains("(All) ") {
-            channel = "(All) ".to_string();
+            channel = "All".to_string();
             line = line.replace("(All) ", "");
         }
         else {
             continue;
         }
         
-
-        for char in i.chars() {
+        let mut user: String = String::new();
+        for char in line.chars() {
             if char == ':' {
-                line = line.replace(&user.to_string(), "");
+                line = line.replace(&(user.to_string() + ": "), "");
                 break;
             }
             else {
                 user.push(char);
             }
         }
-        chatHistory.append(valorant_chat_class.call1((channel.clone(), user.clone(), message.clone()))?)?;
+        chatHistory.append(valorant_chat_class.call1((channel.clone(), user.clone(), &line))?)?;
 
-        println!("{}", i);
     }
 
 
-    println!("The String output is: {:?}", output);
 
     
     Ok(chatHistory.into())
@@ -107,6 +101,6 @@ fn readChatTest(py: Python) -> PyResult<PyObject> {
 #[pymodule]
 fn RustModules(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(readChat, m)?)?;
-    m.add_function(wrap_pyfunction!(readChatTest, m)?)?;
+    //m.add_function(wrap_pyfunction!(readChatTest, m)?)?;
     Ok(())
 }
