@@ -81,12 +81,16 @@ def readChat():
 
 # since this file returns a pretty nice data struct, and it seems computationally heavy, it might be agood idea to rewrite this one in a differnet language
 # I know that exposing rust to python is decently easy, so il research that
+# so that was a fucking lie
 
 import pydirectinput
 import keyboard
 
 import re
-if __name__ == "__main__":
+
+# This can be completely separate from the main modules, since they really don't need to interact often
+# If they do, i can just refactor it later into a class cuz idrc
+def ChatModule():
     lastMsg = ValorantChat("", "", "")
 
     from Overlay import startSetup
@@ -120,11 +124,10 @@ if __name__ == "__main__":
             if "[HEALTHINDICATOR]" in response.text:
                 # regex to extract the numbers in response.text
                 # Find all numbers in the text
-
                 numbers = re.findall(r'\d+', response.text)
                 if numbers:
-                    print("Updating label...")
-                    worker.update_label(0, str(numbers))  # Update the first label (index 0)
+                    print("Updating label... " + str(numbers[0]))
+                    worker.update_label(0, int(numbers[0]))  # Update the first label (index 0)
                     pass
             else:
                 if "html" in response.text:
@@ -143,3 +146,5 @@ if __name__ == "__main__":
 
 
         time.sleep(4.5)
+if __name__ == "__main__":
+    ChatModule()

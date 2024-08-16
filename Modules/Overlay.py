@@ -23,6 +23,7 @@ class HealthLabel:
         self.label.setGeometry(934 + (offset * 52), 69, 38, 18)
 
     def updateLabel(self, value):
+        print("Desired value: " + value)
         self.label.setText(str(value))
 
 global worker, label1, label2, label3, label4, label5
@@ -64,3 +65,15 @@ def update_label(index, value):
 def startSetup():
     global worker
     threading.Thread(target=setup_overlay, daemon=True).start()
+
+
+# Each agent has a 40x40 area at the top of the screen.
+# Player 1 on your team is at x=710 and y=30
+# Player 2 is x=644
+# P3 is x=578
+# The offset for the left team from P1 is
+# Once the agent has been found, I can map that agent to the label and position.
+# However, when a player dies, their model is shoved closer to the middle
+# When this happens, i can run a scan again and move the labels accordingly
+# I also don't need to research for each agent, i can just check for the ones found in the first place
+# store them in a list or something ideally, maybe even a dict
