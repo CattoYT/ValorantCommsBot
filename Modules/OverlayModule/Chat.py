@@ -97,7 +97,7 @@ def ChatModule():
     startSetup()
     time.sleep(1)  # Add a slight delay to ensure the overlay is initialized
     from Overlay import worker  # Import after the setup is done
-    from Managers.RoundPhaseManager import RPManager
+    from Modules.Managers.RoundPhaseManager import RPManager
 
 
     RPMgr = RPManager()
