@@ -11,7 +11,7 @@
 
 # This is going to be offset from the first player on the right because it would just be easier lol
 #
-import detectors
+from detectors import capture_screenshot
 import numpy as np
 
 
@@ -21,36 +21,36 @@ import numpy as np
 def getAgent(position, screenshot=None): # position is 1 indexed.
     valorantAgents = {
         # I did this manually. Im going to die :|
-        "Astra": (79, 61, 59),
-        "Breach": (189, 154, 132),
-        "Brimstone": (218, 169, 132),
-        "Chamber": (214, 195, 181),
-        "Clove": (190, 144, 135),
-        "Cypher": (20, 23, 33),
-        "Deadlock": (198, 146, 123),
-        "Fade": (190, 145, 127),
-        "Gekko": (189, 134, 107),
-        "Harbor": (119, 79, 68),
-        "Iso": (171, 131, 105),
-        "Jett": (194, 138, 120),
-        "KAY/O": (110, 126, 131),
-        "Killjoy": (233, 213, 233),
-        "Neon": (17, 18, 21),
-        "Omen": (24, 255, 255),
-        "Phoenix": (107, 73, 66),
-        "Raze": (156, 112, 96),
-        "Reyna": (129, 85, 79),
-        #   TODO: Add the rest of the agents
-        "Sage": (),
-        "Skye": (),
-        "Sova": (),
-        "Viper": (),
-        "Yoru": ()
-
+        (79, 61, 59): "Astra",
+        (189, 154, 132): "Breach",
+        (218, 169, 132): "Brimstone",
+        (214, 195, 181): "Chamber",
+        (190, 144, 135): "Clove",
+        (20, 23, 33): "Cypher",
+        (198, 146, 123): "Deadlock",
+        (190, 145, 127): "Fade",
+        (189, 134, 107): "Gekko",
+        (119, 79, 68): "Harbor",
+        (171, 131, 105): "Iso",
+        (194, 138, 120): "Jett",
+        (110, 126, 131): "KAY/O",
+        (233, 213, 233): "Killjoy",
+        (17, 18, 21): "Neon",
+        (24, 255, 255): "Omen",
+        (107, 73, 66): "Phoenix",
+        (156, 112, 96): "Raze",
+        (129, 85, 79): "Reyna",
+        (66, 58, 58): "Sage",
+        (183, 179, 157): "Skye",
+        (201, 168, 160): "Sova",
+        (101, 101, 95): "Viper",
+        (8, 12, 24): "Yoru"
     }
     offsetX = 380 + (int (position)*66)
+    if position > 5:
+        offsetX += 394
     if not screenshot:
-        screenshot = detectors.capture_screenshot()
+        screenshot = capture_screenshot()
     region_y = 30
     region_width = 40
     region_height = 40
@@ -59,12 +59,17 @@ def getAgent(position, screenshot=None): # position is 1 indexed.
     # center pixel of the cropped image
     screenshot = screenshot.convert('RGB')
     centerPixelX, centerPixelY = int(region_width / 2), int(region_height / 2)
-    print(centerPixelX, centerPixelY)
-    print(offsetX+centerPixelX, region_y+centerPixelY)
-    print(screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY)))
+    print((offsetX+centerPixelX, region_y+centerPixelY))
+    try:
+        print(valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))])
+    except KeyError:
+        print("No agent")
 
+def getAllAgents(screenshot=None):
+    for i in range(1, 11):
+        getAgent(i, screenshot=screenshot)
 
 if __name__ == "__main__":
     while True:
-        getAgent(5)
+        getAllAgents()
         input()
