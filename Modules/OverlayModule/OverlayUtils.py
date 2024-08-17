@@ -15,10 +15,23 @@ from detectors import capture_screenshot
 import numpy as np
 
 
+class Agent:
+    def __init__(self, name, baseposition, health):
+        self.name = name
+        self.baseposition = baseposition
+        self.currentPosition = baseposition
+        self.health = 150
 
 
 
-def getAgent(position, screenshot=None): # position is 1 indexed.
+    def __str__(self):
+        return f"{self.name} at position {self.currentPosition}"
+
+    def Info(self):
+        return f"{self.name} at position {self.currentPosition}"
+
+
+def getAgent(position, team="L", screenshot=None): # position is 1 indexed.
     valorantAgents = {
         # I did this manually. Im going to die :|
         (79, 61, 59): "Astra",
@@ -46,9 +59,12 @@ def getAgent(position, screenshot=None): # position is 1 indexed.
         (101, 101, 95): "Viper",
         (8, 12, 24): "Yoru"
     }
-    offsetX = 380 + (int (position)*66)
-    if position > 5:
-        offsetX += 394
+    if team == "L":
+
+        offsetX = 380 + (int (position)*66)
+    if team == "R":
+        offsetX = 1104 + (int(position) * 66) # DONT TOUCH THESE VALUES, THEY ARE PIXEL PERFECT
+
     if not screenshot:
         screenshot = capture_screenshot()
     region_y = 30
@@ -61,15 +77,48 @@ def getAgent(position, screenshot=None): # position is 1 indexed.
     centerPixelX, centerPixelY = int(region_width / 2), int(region_height / 2)
     print((offsetX+centerPixelX, region_y+centerPixelY))
     try:
-        print(valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))])
+        agent = valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))]
+        print(agent)
     except KeyError:
         print("No agent")
+        agent = "Dead"
+
+    return agent
 
 def getAllAgents(screenshot=None):
-    for i in range(1, 11):
-        getAgent(i, screenshot=screenshot)
+    positionsL = {
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+
+    }
+    positionsR = {
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+
+    }
+    for i in positionsL:  # had to do this because of the way the agents are offset
+        positionsL[i] = getAgent(6-i, team="L", screenshot=screenshot) # dont question it
+    for i in positionsR:
+        positionsR[i] = getAgent(i, team="R", screenshot=screenshot)
+    return positionsL, positionsR # This returns from the center
+
 
 if __name__ == "__main__":
-    while True:
-        getAllAgents()
-        input()
+
+    L, R = getAllAgents()
+    print(L)
+    for i in L:
+        L[i] = Agent(L[i], i, 150)
+        print(L[i].Info())
+    input()
+
+# Things to do in this file:
+# Check which agents have died and move their object
+# Check which agents have died and set their health to 0
+# Account for revives (no i want to die)
