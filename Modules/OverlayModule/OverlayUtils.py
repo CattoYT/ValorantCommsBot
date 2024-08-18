@@ -8,6 +8,7 @@
 # When this happens, i can run a scan again and move the labels accordingly
 # I also don't need to research for each agent, i can just check for the ones found in the first place
 # store them in a list or something ideally, maybe even a dict
+import time
 
 # This is going to be offset from the first player on the right because it would just be easier lol
 #
@@ -19,7 +20,7 @@ class Agent:
     def __init__(self, name, baseposition, health):
         self.name = name
         self.baseposition = baseposition
-        self.currentPosition = baseposition
+        self.currentPosition = baseposition # If this = 0, they are dead
         self.health = 150
 
 
@@ -75,10 +76,9 @@ def getAgent(position, team="L", screenshot=None): # position is 1 indexed.
     # center pixel of the cropped image
     screenshot = screenshot.convert('RGB')
     centerPixelX, centerPixelY = int(region_width / 2), int(region_height / 2)
-    print((offsetX+centerPixelX, region_y+centerPixelY))
     try:
         agent = valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))]
-        print(agent)
+        #print(agent)
     except KeyError:
         print("No agent")
         agent = "Dead"
@@ -110,13 +110,46 @@ def getAllAgents(screenshot=None):
 
 
 if __name__ == "__main__":
-
+    #This block here needs to be run in the buy phase ideally, since then everyone is alive
+    #It also ensures that the base positions are correct
+    validAgentsL = []
+    validAgentsR = []
     L, R = getAllAgents()
-    print(L)
-    for i in L:
-        L[i] = Agent(L[i], i, 150)
-        print(L[i].Info())
+    print(R)
+    for i in R:
+        validAgentsR.append(Agent(R[i], i, 150))
+
+
     input()
+
+    while True:
+        screenshot = capture_screenshot()
+        L, R = getAllAgents(screenshot)
+        for i in R:
+            if R[i] != validAgentsR[i - 1].name:
+                #get the agent that changed
+                agent = validAgentsR.pop(i - 1)
+
+                if R[i] == "Dead":
+                    agent.health = 0
+                    agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
+
+                else:
+                    agent.name = R[i]
+                    agent.currentPosition = i
+
+                # shove the agent back in
+                validAgentsR.insert(i - 1, agent)
+                print(f"Agent {i} has been moved to {R[i]} at position {i}")
+
+
+        for agent in validAgentsR:
+            print(agent.Info())
+
+        time.sleep(5)
+
+
+
 
 # Things to do in this file:
 # Check which agents have died and move their object
