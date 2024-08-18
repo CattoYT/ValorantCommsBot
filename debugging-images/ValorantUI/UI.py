@@ -45,8 +45,8 @@ def main():
                         pygame.display.toggle_fullscreen()
                     elif event.key == pygame.K_a:
                         agentAdder = input("Add an agent: (1-17")
-                        agentImage = pygame.image.load("Original Agent Icons/Skye_icon.png").convert() # fix this
-                        agents.append(AgentImage(agentImage, 710, 30))
+                        agentImage = pygame.image.load("Correct Agents/Gekko.png").convert_alpha() # fix this
+                        agents.append(AgentImage(agentImage, 380+66, 30))
                 case pygame.KEYUP:
                     print(event.key) # debug statement, not necessary but I like it
 
@@ -56,7 +56,7 @@ def main():
         pygame.display.flip()
 
 
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(30) / 1000
 
     pygame.quit()
 
