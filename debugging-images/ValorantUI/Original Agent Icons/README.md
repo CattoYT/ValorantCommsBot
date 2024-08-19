@@ -1,1 +1,0 @@
-Images sourced from [here](https://github.com/deepsidh9/Live-Valorant-Overlay/tree/main/app/templates/agent_templates)
