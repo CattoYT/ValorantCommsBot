@@ -1,3 +1,5 @@
+import os
+
 import pygame
 import ctypes
 ctypes.windll.user32.SetProcessDPIAware()
@@ -16,6 +18,7 @@ class AgentImage:
         self.y = y
 
 
+
 def main():
     global running
     global active
@@ -23,6 +26,15 @@ def main():
     global user_text
     global dt
     global currentMessage
+
+    agentPNGs = []
+    # if this doesnt work, set working directory in pycharm to ValorantUI
+    for file in os.listdir("Correct Agents"):
+        f = os.path.join("Correct Agents", file)
+        if not ".png" in f:
+            continue
+        agentPNGs.append(f)
+    print(len(agentPNGs))
 
     running = True
     fullscreen = False
@@ -44,9 +56,12 @@ def main():
                     if event.key == pygame.K_F11:
                         pygame.display.toggle_fullscreen()
                     elif event.key == pygame.K_a:
-                        agentAdder = input("Add an agent: (1-17")
-                        agentImage = pygame.image.load("Correct Agents/Gekko.png").convert_alpha() # fix this
-                        agents.append(AgentImage(agentImage, 380+66, 30))
+                        agentAdder = int(input("Add an agent: (1-24 "))
+                        try:
+                            agentImage = pygame.image.load(str(agentPNGs[agentAdder-1])).convert_alpha() # fix this
+                            agents.append(AgentImage(agentImage, 446+(66*len(agents)), 30))
+                        except IndexError:
+                            print("Invalid agent number")
                 case pygame.KEYUP:
                     print(event.key) # debug statement, not necessary but I like it
 

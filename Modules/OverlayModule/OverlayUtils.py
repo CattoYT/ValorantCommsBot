@@ -118,9 +118,10 @@ def getAgent(position, team="L", screenshot=None): # position is 1 indexed.
     screenshot = screenshot.convert('RGB')
     centerPixelX, centerPixelY = int(region_width / 2), int(region_height / 2)
 
-    print(screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY)))
+    #print(screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY)))
     try:
         agent = valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))]
+        print(agent)
         #print(agent)
     except KeyError:
         print("No agent")
@@ -173,7 +174,7 @@ if __name__ == "__main__":
         screenshot = capture_screenshot()
         L, R = getAllAgents(screenshot)
         for i in L:
-            if L[i] != validAgentsL[i - 1].name:
+            if L[i] != validAgentsL[i - 1].name: # Index error here. TODO: Fix this
                 #get the agent that changed
                 agent = validAgentsL.pop(i - 1)
 
