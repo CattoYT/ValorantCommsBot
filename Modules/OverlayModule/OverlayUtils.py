@@ -8,7 +8,10 @@
 # When this happens, i can run a scan again and move the labels accordingly
 # I also don't need to research for each agent, i can just check for the ones found in the first place
 # store them in a list or something ideally, maybe even a dict
+import os
 import time
+
+from PIL import Image
 
 # This is going to be offset from the first player on the right because it would just be easier lol
 #
@@ -30,6 +33,44 @@ class Agent:
 
     def Info(self):
         return f"{self.name} at position {self.currentPosition}"
+
+def checkFiles():
+    valorantAgents = {
+        # I did this manually. Im going to die :|
+        (79, 61, 59): "Astra",
+        (189, 154, 132): "Breach",
+        (218, 169, 132): "Brimstone",
+        (214, 195, 181): "Chamber",
+        (190, 144, 135): "Clove",
+        (20, 23, 33): "Cypher",
+        (198, 146, 123): "Deadlock",
+        (190, 145, 127): "Fade",
+        (189, 134, 107): "Gekko",
+        (119, 79, 68): "Harbor",
+        (171, 131, 105): "Iso",
+        (194, 138, 120): "Jett",
+        (110, 126, 131): "KAY/O",
+        (233, 213, 233): "Killjoy",
+        (17, 18, 21): "Neon",
+        (24, 255, 255): "Omen",
+        (107, 73, 66): "Phoenix",
+        (156, 112, 96): "Raze",
+        (129, 85, 79): "Reyna",
+        (66, 58, 58): "Sage",
+        (183, 179, 157): "Skye",
+        (201, 168, 160): "Sova",
+        (101, 101, 95): "Viper",
+        (8, 12, 24): "Yoru"
+    }
+    # iterate through every image in the "Correct Agents" directory
+
+    for file in os.listdir("debugging-images/ValorantUI/Correct Agents"):
+        f = os.path.join("debugging-images/ValorantUI/Correct Agents", file)
+
+        image = Image.open(f)
+        image = image.convert('RGB')
+        agent = valorantAgents[image.getpixel((20,20))]
+        print(agent)
 
 
 def getAgent(position, team="L", screenshot=None): # position is 1 indexed.
@@ -110,7 +151,7 @@ def getAllAgents(screenshot=None):
         positionsR[i] = getAgent(i, team="R", screenshot=screenshot)
     return positionsL, positionsR # This returns from the center
 
-
+# checkFiles()
 if __name__ == "__main__":
     #This block here needs to be run in the buy phase ideally, since then everyone is alive
     #It also ensures that the base positions are correct
