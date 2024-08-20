@@ -21,6 +21,7 @@ import numpy as np
 
 class Agent:
     def __init__(self, name, baseposition, health):
+        self.originalName = name
         self.name = name
         self.baseposition = baseposition
         self.currentPosition = baseposition # If this = 0, they are dead
@@ -29,10 +30,10 @@ class Agent:
 
 
     def __str__(self):
-        return f"{self.name} at position {self.currentPosition}"
+        return f"{self.originalName} at position {self.currentPosition}"
 
     def Info(self):
-        return f"{self.name} at position {self.currentPosition}"
+        return f"{self.originalName} at position {self.currentPosition}"
 
 def checkFiles():
     valorantAgents = {
@@ -121,10 +122,10 @@ def getAgent(position, team="L", screenshot=None): # position is 1 indexed.
     #print(screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY)))
     try:
         agent = valorantAgents[screenshot.getpixel((offsetX+centerPixelX, region_y+centerPixelY))]
-        print(agent)
+        #print(agent)
         #print(agent)
     except KeyError:
-        print("No agent")
+        #print("No agent")
         agent = "Dead"
 
     return agent
@@ -150,6 +151,8 @@ def getAllAgents(screenshot=None):
         positionsL[i] = getAgent(6-i, team="L", screenshot=screenshot) # dont question it
     for i in positionsR:
         positionsR[i] = getAgent(i, team="R", screenshot=screenshot)
+    print(positionsL)
+    print(positionsR)
     return positionsL, positionsR # This returns from the center
 
 # checkFiles()
@@ -174,13 +177,15 @@ if __name__ == "__main__":
         screenshot = capture_screenshot()
         L, R = getAllAgents(screenshot)
         for i in L:
-            if L[i] != validAgentsL[i - 1].name: # Index error here. TODO: Fix this
+            print(i)
+            print(L[i])
+            if L[i] != validAgentsL[i - 1].name: # TODO: Fix this
                 #get the agent that changed
                 agent = validAgentsL.pop(i - 1)
 
                 if L[i] == "Dead":
                     agent.health = 0
-                    agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
+                    agent.currentPosition = None # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
 
                 else:
                     agent.name = L[i]
@@ -193,27 +198,28 @@ if __name__ == "__main__":
 
         for agent in validAgentsL:
             print(agent.Info())
-        for i in R:
-            if R[i] != validAgentsR[i - 1].name:
-                #get the agent that changed
-                agent = validAgentsR.pop(i - 1)
 
-                if R[i] == "Dead":
-                    agent.health = 0
-                    agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
-
-                else:
-                    agent.name = R[i]
-                    agent.currentPosition = i
-
-                # shove the agent back in
-                validAgentsR.insert(i - 1, agent)
-                print(f"Agent {i} has been moved to {R[i]} at position {i}")
-
-
-        for agent in validAgentsR:
-            print(agent.Info())
-
+        # for i in R:
+        #     if R[i] != validAgentsR[i - 1].name:
+        #         #get the agent that changed
+        #         agent = validAgentsR.pop(i - 1)
+        #
+        #         if R[i] == "Dead":
+        #             agent.health = 0
+        #             agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
+        #
+        #         else:
+        #             agent.name = R[i]
+        #             agent.currentPosition = i
+        #
+        #         # shove the agent back in
+        #         validAgentsR.insert(i - 1, agent)
+        #         print(f"Agent {i} has been moved to {R[i]} at position {i}")
+        #
+        #
+        # for agent in validAgentsR:
+        #     print(agent.Info())
+        #
         time.sleep(5)
 
 
