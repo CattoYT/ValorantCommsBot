@@ -161,7 +161,7 @@ if __name__ == "__main__":
     L, R = getAllAgents()
     print(L)
     for i in L:
-        validAgentsR.append(Agent(L[i], i, 150))
+        validAgentsL.append(Agent(L[i], i, 150))
 
     print(R)
     for i in R:
@@ -193,26 +193,26 @@ if __name__ == "__main__":
 
         for agent in validAgentsL:
             print(agent.Info())
-        # for i in R:
-        #     if R[i] != validAgentsR[i - 1].name:
-        #         #get the agent that changed
-        #         agent = validAgentsR.pop(i - 1)
-        #
-        #         if R[i] == "Dead":
-        #             agent.health = 0
-        #             agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
-        #
-        #         else:
-        #             agent.name = R[i]
-        #             agent.currentPosition = i
-        #
-        #         # shove the agent back in
-        #         validAgentsR.insert(i - 1, agent)
-        #         print(f"Agent {i} has been moved to {R[i]} at position {i}")
-        #
-        #
-        # for agent in validAgentsR:
-        #     print(agent.Info())
+        for i in R:
+            if R[i] != validAgentsR[i - 1].name:
+                #get the agent that changed
+                agent = validAgentsR.pop(i - 1)
+
+                if R[i] == "Dead":
+                    agent.health = 0
+                    agent.currentPosition = 0 # has to be set to 0 because i literally dont know any other way of maknig it seem that they are ead
+
+                else:
+                    agent.name = R[i]
+                    agent.currentPosition = i
+
+                # shove the agent back in
+                validAgentsR.insert(i - 1, agent)
+                print(f"Agent {i} has been moved to {R[i]} at position {i}")
+
+
+        for agent in validAgentsR:
+            print(agent.Info())
 
         time.sleep(5)
 
