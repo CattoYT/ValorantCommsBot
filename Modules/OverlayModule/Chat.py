@@ -93,10 +93,10 @@ import re
 def ChatModule():
     lastMsg = ValorantChat("", "", "")
 
-    from Overlay import startSetup
+    from qtOverlay import startSetup
     startSetup()
     time.sleep(1)  # Add a slight delay to ensure the overlay is initialized
-    from Overlay import worker  # Import after the setup is done
+    from qtOverlay import worker  # Import after the setup is done
     from Modules.Managers.RoundPhaseManager import RPManager
 
 
