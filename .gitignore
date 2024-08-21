@@ -4,3 +4,4 @@ _pycache_/*
 .idea/*
 /Modules/RustModules/target/*
 /Modules/RustModules/.idea/*
+/Modules/RustModules/Cargo.lock

@@ -28,43 +28,53 @@ class HealthLabel:
 
 global worker, label1, label2, label3, label4, label5
 
-def setup_overlay():
-    global worker, label1, label2, label3, label4, label5
+class QTOverlay:
 
-    app = QApplication(sys.argv)
+    def setup_overlay(self):
+        global worker, label1, label2, label3, label4, label5
 
-    overlay = QWidget()
-    overlay.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.X11BypassWindowManagerHint)
-    overlay.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-    overlay.setGeometry(0, 0, 1536, 834)
+        app = QApplication(sys.argv)
 
-    # Instantiate HealthLabel instances
-    label1 = HealthLabel(overlay, 150, 0)
-    label2 = HealthLabel(overlay, 150, 1)
-    label3 = HealthLabel(overlay, 150, 2)
-    label4 = HealthLabel(overlay, 150, 3)
-    label5 = HealthLabel(overlay, 150, 4)
+        overlay = QWidget()
+        overlay.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.X11BypassWindowManagerHint)
+        overlay.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        overlay.setGeometry(0, 0, 1536, 834)
 
-    # Worker and thread setup
-    worker = Worker()
-    worker_thread = QThread()
-    worker.moveToThread(worker_thread)
+        # Instantiate HealthLabel instances
+        label1 = HealthLabel(overlay, 150, 0)
+        label2 = HealthLabel(overlay, 150, 1)
+        label3 = HealthLabel(overlay, 150, 2)
+        label4 = HealthLabel(overlay, 150, 3)
+        label5 = HealthLabel(overlay, 150, 4)
 
-    # Connect signals to the slot that updates labels
-    worker.update_label_signal.connect(lambda index, value: update_label(index, value))
-    worker_thread.start()
+        # Worker and thread setup
+        worker = Worker()
+        worker_thread = QThread()
+        worker.moveToThread(worker_thread)
 
-    overlay.show()
-    sys.exit(app.exec())
+        # Connect signals to the slot that updates labels
+        worker.update_label_signal.connect(lambda index, value: self.update_label(index, value))
+        worker_thread.start()
 
-def update_label(index, value):
-    labels = [label1, label2, label3, label4, label5]
-    if 0 <= index < len(labels):
-        labels[index].updateLabel(str(int(labels[index].label.text()) - int(value)))
+        overlay.show()
+        sys.exit(app.exec())
 
-def startSetup():
-    global worker
-    threading.Thread(target=setup_overlay, daemon=True).start()
+    def update_label(self, index, value, agent=None):
+        labels = [label1, label2, label3, label4, label5]
+        if agent:
+            if agent.side == "L":
+                raise Exception("Not implemented")
+            if agent.side == "R":
+                index = agent.currentPosition
+            agent.health = value
+
+        if 0 <= index < len(labels):
+            labels[index].updateLabel(str(int(labels[index].label.text()) - int(value)))
+
+    def startSetup(self):
+        global worker
+        threading.Thread(target=self.setup_overlay, daemon=True).start()
 
 
 

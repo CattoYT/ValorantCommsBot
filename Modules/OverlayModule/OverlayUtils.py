@@ -8,6 +8,9 @@
 # When this happens, i can run a scan again and move the labels accordingly
 # I also don't need to research for each agent, i can just check for the ones found in the first place
 # store them in a list or something ideally, maybe even a dict
+
+# TODO: Rename this file to ValorantAgentTracker.py for cleaner organisation. Don't ask why this is todo
+
 import os
 import time
 from PIL import Image
@@ -20,6 +23,7 @@ class Agent:
         self.originalName = name
         self.name = name
         self.baseposition = baseposition
+        self.side = "L"
         self.currentPosition = baseposition  # If this = None, they are dead
         self.health = health
 
@@ -62,7 +66,16 @@ class ValorantAgentTracker:
         self.validAgentsL = []
         self.validAgentsR = []
 
-    def getAgentObject(self, name, team="L", screenshot=None):
+        # initialize values
+        L, R = self.getAllAgents()
+
+        for i in L:
+            self.validAgentsL.append(Agent(L[i], i, "L", 150))
+
+        for i in R:
+            self.validAgentsR.append(Agent(R[i], i, "R", 150))
+
+    def getAgentObject(self, name, team="R"):
         if team == "L":
             validAgents = self.validAgentsL
         elif team == "R":
@@ -152,19 +165,24 @@ class ValorantAgentTracker:
             except KeyError:
                 print(f"Agent {current_name} not found in active agents.")
 
+    def updateAgentPositions(self):
+        screenshot = capture_screenshot()
+        L, R = self.getAllAgents(screenshot)
+        self.reorganizeAgents(self.validAgentsL, L)
+        self.reorganizeAgents(self.validAgentsR, R)
+
+        for agent in self.validAgentsL:
+            print(agent.Info())
+        for agent in self.validAgentsR:
+            print(agent.Info())
+
+        time.sleep(5)
+
 
 if __name__ == "__main__":
     tracker = ValorantAgentTracker()
 
-    # This block here needs to be run in the buy phase ideally, since then everyone is alive
-    # It also ensures that the base positions are correct
-    L, R = tracker.getAllAgents()
 
-    for i in L:
-        tracker.validAgentsL.append(Agent(L[i], i, 150))
-
-    for i in R:
-        tracker.validAgentsR.append(Agent(R[i], i, 150))
 
     input("Press Enter to start monitoring...")
 
