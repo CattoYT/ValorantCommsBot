@@ -4,7 +4,13 @@ import threading
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
 
+from Modules.OverlayModule.OverlayUtils import Agent
+
+
 # Worker object and signals are done by chatgpt,I couldn't find out how this works and i couldn't find the docs :/
+
+
+
 class Worker(QObject):
     update_label_signal = pyqtSignal(int, int)  # Signal to update label (index, value)
 
@@ -12,6 +18,9 @@ class Worker(QObject):
         super().__init__()
 
     def update_label(self, index, value):
+
+
+
         self.update_label_signal.emit(index, value)
 
 class HealthLabel:
@@ -27,9 +36,11 @@ class HealthLabel:
         self.label.setText(str(value))
 
 global worker, label1, label2, label3, label4, label5
+worker = Worker()
+
 
 class QTOverlay:
-
+    global worker
     def setup_overlay(self):
         global worker, label1, label2, label3, label4, label5
 
@@ -49,7 +60,6 @@ class QTOverlay:
         label5 = HealthLabel(overlay, 150, 4)
 
         # Worker and thread setup
-        worker = Worker()
         worker_thread = QThread()
         worker.moveToThread(worker_thread)
 
@@ -60,15 +70,12 @@ class QTOverlay:
         overlay.show()
         sys.exit(app.exec())
 
-    def update_label(self, index, value, agent=None):
+    # This function will update the label with the given index. If passed an agent object, it will get the information from the agent at that position and then update the label.
+    def update_label(self, index, value):
+        print("AAA")
         labels = [label1, label2, label3, label4, label5]
-        if agent:
-            if agent.side == "L":
-                raise Exception("Not implemented")
-            if agent.side == "R":
-                index = agent.currentPosition
-            agent.health = value
 
+        print(index, value)
         if 0 <= index < len(labels):
             labels[index].updateLabel(str(int(labels[index].label.text()) - int(value)))
 

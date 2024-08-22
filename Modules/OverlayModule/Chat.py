@@ -58,6 +58,8 @@ class ChatModule:
         if not agentTracker:
             from Modules.OverlayModule.OverlayUtils import ValorantAgentTracker
             self.AgentTracker = ValorantAgentTracker()
+        else:
+            self.AgentTracker = agentTracker
 
         self.lastMsg = ValorantChat("", "", "")
 
@@ -76,6 +78,10 @@ class ChatModule:
             data = RustModules.readChat(output.getvalue())
         return data
 
+
+
+    # This is the main function for this class, where it reads the chat and sends the message to the server
+    # It also runs the worker function.
     def updateChat(self):
         data = self.readChat()
 
@@ -107,14 +113,16 @@ class ChatModule:
 
                 # This section may need a little work, since the chatmodule is separate now
                 # START OF SHITTY SECTION
+
                 agentObj = self.AgentTracker.getAgentObject(agent)
                 agentObj.health = int(numbers[0])
+                print(f"Updated {agentObj.originalName} health to {agentObj.health}")
                 # END OF SHITTY SECTION
 
 
                 if numbers:
                     print("Updating label... " + str(numbers[0]))
-                    self.worker.update_label(0, int(numbers[0]))  # Update the first label (index 0)
+                    self.worker.update_label(agentObj.currentPosition, int(numbers[0]))  # Update the first label (index 0)
                     pass
 
 
@@ -125,10 +133,11 @@ class ChatModule:
 
                 # This can be integrated with RPManager to only act as a chatbot during buy phase
                 if self.RPMgr.currentPhase == "Buy":
-                    print("Typing Message...")
-                    pydirectinput.press('enter')
-                    keyboard.write(f"{response.text}")
-                    pydirectinput.press('enter')
+                    pass
+                    # print("Typing Message...")
+                    # pydirectinput.press('enter')
+                    # keyboard.write(f"{response.text}")
+                    # pydirectinput.press('enter')
             self.lastMsg = data[-1]
         else:
             print("No new messages")

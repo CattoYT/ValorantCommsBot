@@ -18,12 +18,14 @@ from detectors import capture_screenshot
 import numpy as np
 
 
-class Agent:
-    def __init__(self, name, baseposition, health):
+class Agent(object):
+    def __init__(self, name, baseposition, side, health : int):
         self.originalName = name
         self.name = name
         self.baseposition = baseposition
-        self.side = "L"
+        if side not in ["L", "R"]:
+            self.side = "L"
+        self.side = side
         self.currentPosition = baseposition  # If this = None, they are dead
         self.health = health
 
@@ -32,7 +34,16 @@ class Agent:
 
     def Info(self):
         return f"{self.originalName} at position {self.currentPosition}"
+    def json(self):
+        return {
+            "name": self.originalName,
+            "originalName": self.originalName,
+            "currentPosition": self.currentPosition,
+            "baseposition": self.baseposition,
+            "health": self.health,
+            "side": self.side,
 
+        }
 
 class ValorantAgentTracker:
     def __init__(self):
@@ -70,6 +81,7 @@ class ValorantAgentTracker:
         L, R = self.getAllAgents()
 
         for i in L:
+
             self.validAgentsL.append(Agent(L[i], i, "L", 150))
 
         for i in R:

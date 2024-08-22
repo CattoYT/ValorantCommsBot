@@ -23,7 +23,7 @@ fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
     };
     let fussyImg = Image::from_dynamic_image(&img).unwrap();
     let output = rusty_tesseract::image_to_string(&fussyImg, &my_args).unwrap(); //Compile with --release so that this doesn't put the command in the console
-    let valorant_chat_class: &PyAny = py.import("Modules.Chat")?.getattr("ValorantChat").unwrap();
+    let valorant_chat_class: &PyAny = py.import("Modules.OverlayModule.Chat")?.getattr("ValorantChat").unwrap();
 
     let chatHistory = PyList::empty(py);
 
