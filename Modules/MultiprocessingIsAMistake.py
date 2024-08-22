@@ -23,9 +23,9 @@ def IMFUCKINGTALKING():
     global someoneistalking
     scenario = request.args.get("scenario")
 
-    if someoneistalking:
-        # Return immediately if someone is already talking
-        return jsonify({'status': 'busy'}), 429
+    # if someoneistalking:
+    #     # Return immediately if someone is already talking
+    #     return jsonify({'status': 'busy'}), 429
 
 
     with lock:

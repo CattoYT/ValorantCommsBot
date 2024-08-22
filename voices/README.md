@@ -28,6 +28,5 @@ The following events are currently supported and can be triggered:
 
 The other events are not used in the bot, but probably will be in the future.
 - health-recovered (sage/skye heal)
-
-- teammate-death 
+- teammate-death (The code for this is already in detectors.py, however I don't need it yet)
 

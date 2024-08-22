@@ -34,10 +34,7 @@ class WLManager(BaseLiveManager):
             screenshot = sct_img.crop((region_x, region_y, region_x + region_width, region_y + region_height))
             text = pytesseract.image_to_string(screenshot, config=r'--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "')
 
-            if text:
-                screenshot.save("yes.png")
-                print(text)
-            else:
+            if not text:
                 #print("No text detected")
                 time.sleep(6)
                 continue

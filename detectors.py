@@ -1,3 +1,14 @@
+'''
+This is a legacy file!
+For future me: You should PROBABLY recode this
+Only 2 files are still used from before the recode, which is this and speaker.py
+Now, future me, you have two options.
+1. You can recode this file for ease of use
+2. Ignore it
+Take your pick.
+'''
+
+
 import re
 
 import cv2
@@ -132,7 +143,7 @@ def getKills(me=True): # me is cuz i sometimes use name hider lol
 def getAlive():
     #the images used here LITERALLY JUST GOT CHANGED IN THE LAST PATCH LMAO
     #The new image uses pyautogui instead of pytesseract cuz the position changes and i really don't care enough
-
+    # This gets my alive from the combat report, might migrate to the switch player screen instead
 
     region_x = 1611   # X-coordinate of the top-left corner of the region
     region_y = 191  # Y-coordinate of the top-left corner of the region

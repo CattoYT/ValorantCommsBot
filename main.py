@@ -68,7 +68,7 @@ def main():
         #
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
-        print("Kills: " + str(KillsMgr.killcount)) #fixed
+        print("Kills: " + str(KillsMgr.killcount)) #IF THIS ISNT WORKING, ITS PROBABLY BECAUSE THE WRONG KILLNAME IS USED
         print("Phase: " + str(RPMgr.currentPhase)) #working
         print("Last Round: " + str(WLMgr.previousRoundResult)) #working
 
