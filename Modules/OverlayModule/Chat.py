@@ -117,14 +117,14 @@ class ChatModule:
                 agentObj = self.AgentTracker.getAgentObject(agent)
                 agentObj.health = int(numbers[0])
                 print(f"Updated {agentObj.originalName} health to {agentObj.health}")
-                # END OF SHITTY SECTION
+
 
 
                 if numbers:
                     print("Updating label... " + str(numbers[0]))
                     self.worker.update_label(agentObj.currentPosition, int(numbers[0]))  # Update the first label (index 0)
                     pass
-
+                # END OF SHITTY SECTION
 
             else:
                 if "html" in response.text:
