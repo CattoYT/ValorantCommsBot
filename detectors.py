@@ -124,18 +124,25 @@ def getDeaths(screenshot):
 
 
 #checks for appearances of my name in the area where kills should be
-def getKills(me=True): # me is cuz i sometimes use name hider lol
+def getKills(name="me"): # me is cuz i sometimes use name hider lol
     region_x = 1244   # X-coordinate of the top-left corner of the region
     region_y = 93  # Y-coordinate of the top-left corner of the region
     region_width = 537 # Width of the region
     region_height = 370 # Height of the region
-    if me:
+    if name == "me":
 
-        matches = pyautogui.locateAllOnScreen('debugging-images/killname-me.png', grayscale=True, confidence=0.8, region=(region_x, region_y, region_width, region_height))
-    else:
+        matches = pyautogui.locateAllOnScreen('debugging-images/killnames/Me.png', grayscale=True, confidence=0.8, region=(region_x, region_y, region_width, region_height))
+    elif name == "iopi":
+        matches = pyautogui.locateAllOnScreen('debugging-images/killnames/iopi.png', grayscale=True, confidence=0.8, region=(region_x, region_y, region_width, region_height))
+
+    elif name == "Serene":
         # fun easter egg about this image, it was taken on Breeze T side spawn and the rock texture keeps messing up detections i think
-        matches = pyautogui.locateAllOnScreen('debugging-images/killname.png', grayscale=True,confidence=0.8, region=(region_x, region_y, region_width, region_height))
-
+        matches = pyautogui.locateAllOnScreen('debugging-images/killnames/Serene.png', grayscale=True,confidence=0.8, region=(region_x, region_y, region_width, region_height))
+    else:
+        # literally just for fun since i remembered a meme
+        def yeet(exception):
+            raise exception
+        yeet(ValueError("Invalid name"))
     return len(list(matches))
 
 

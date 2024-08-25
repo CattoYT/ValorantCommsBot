@@ -4,7 +4,7 @@ import threading
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
 
-from Modules.OverlayModule.OverlayUtils import Agent
+from Modules.OverlayModule.OverlayUtils import Agent, HealthLabel
 
 
 # Worker object and signals are done by chatgpt,I couldn't find out how this works and i couldn't find the docs :/
@@ -18,35 +18,13 @@ class Worker(QObject):
         super().__init__()
 
     def update_label(self, index, value):
-
-
-
         self.update_label_signal.emit(index, value)
 
     def updateLabelPosition(self, agent: Agent):
         print("Updating label position")
         #self.update_label_signal.emit(agent, value)
 
-class HealthLabel:
-    def __init__(self, parentWindow, initialValue=150, offset=0):
-        self.label = QLabel(parentWindow)
-        self.label.setText(str(initialValue))
-        self.label.setStyleSheet("font-family: 'JetBrains Mono'; font-size: 14pt; font-style: italic; color: white; background-color: rgba(0, 0, 0, 0);")
-        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        self.offset = offset
-        self.label.setGeometry(934 + (offset * 52), 69, 38, 18)
-
-    def updateLabel(self, value):
-        print("Desired value: " + value)
-        self.label.setText(str(value))
-
-    def updateLabelPosition(self, value):
-        print("Updating label position")
-        self.label.setGeometry(934 + (self.offset * 52), 69+value, 38, 18)
-
-
-
-global worker, label1, label2, label3, label4, label5
+global overlay, worker, label1, label2, label3, label4, label5
 worker = Worker()
 
 
@@ -57,13 +35,13 @@ class QTOverlay:
 
     global worker
     def setup_overlay(self):
-        global worker, label1, label2, label3, label4, label5
+        global overlay, worker, label1, label2, label3, label4, label5
 
         app = QApplication(sys.argv)
 
         overlay = QWidget()
         overlay.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.X11BypassWindowManagerHint)
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
         overlay.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         overlay.setGeometry(0, 0, 1536, 834)
 
@@ -74,6 +52,7 @@ class QTOverlay:
         label4 = HealthLabel(overlay, 150, 3)
         label5 = HealthLabel(overlay, 150, 4)
 
+
         # Worker and thread setup
         worker_thread = QThread()
         worker.moveToThread(worker_thread)
@@ -83,7 +62,6 @@ class QTOverlay:
         worker.updateLabelPositionSignal.connect(lambda index, value: self.updateLabelPosition(index, value))
 
         worker_thread.start()
-
         overlay.show()
         sys.exit(app.exec())
     def updateLabelPosition(self, index, value):
@@ -114,3 +92,6 @@ class QTOverlay:
 
 
 
+if __name__ == "__main__":
+    overlay = QTOverlay()
+    overlay.setup_overlay()

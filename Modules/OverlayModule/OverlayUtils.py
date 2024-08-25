@@ -16,7 +16,31 @@ import time
 from PIL import Image
 from detectors import capture_screenshot
 import numpy as np
+from PyQt6.QtWidgets import QLabel
+from PyQt6.QtCore import Qt
 
+class HealthLabel:
+    def __init__(self, parentWindow, initialValue=150, offset=0, initNow=True):
+        self.parentWindow = QLabel(parentWindow)
+        self.initialValue = initialValue
+        self.offset = offset
+        if initNow:
+            self.createLabel() # Comment this out after ive migrated (EXPLANATION IN OVERLAY.PY LOOK AT THE BOTTOM)
+
+    def createLabel(self):
+        self.label = QLabel(self.parentWindow)
+        self.label.setText(str(self.initialValue))
+        self.label.setStyleSheet("font-family: 'JetBrains Mono'; font-size: 14pt; font-style: italic; color: white; background-color: rgba(0, 0, 0, 0);")
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        self.label.setGeometry(934 + (self.offset * 52), 69, 38, 18)
+
+    def updateLabel(self, value):
+        print("Desired value: " + value)
+        self.label.setText(str(value))
+
+    def updateLabelPosition(self, value):
+        print("Updating label position")
+        self.label.setGeometry(934 + (self.offset * 52), 69+value, 38, 18)
 
 class Agent(object):
     def __init__(self, name, baseposition, side, health : int):
@@ -28,6 +52,13 @@ class Agent(object):
         self.side = side
         self.currentPosition = baseposition  # If this = None, they are dead
         self.health = health
+
+    #HEAVY BETA CODE PLEASE TOUCH WITH CAUTION
+    def createLabel(self, parentWindow):
+        self.healthLabel = HealthLabel(parentWindow, self.health, self.baseposition, False)
+
+    def getLabel(self):
+        return self.healthLabel # redundant but hey im used to java and it might be cleaner when i eventually forget
 
     def __str__(self):
         return f"{self.originalName} at position {self.currentPosition}"
@@ -145,6 +176,8 @@ class ValorantAgentTracker:
         print(positionsL)
         print(positionsR)
         return positionsL, positionsR  # This returns from the center
+
+    # not gonna lie, looking back, no fuckin clue how this works
 
     def reorganizeAgents(self, validAgents, updatedPositions):
         updated_agents = set(updatedPositions.values())  # Agents currently detected

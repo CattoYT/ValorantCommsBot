@@ -65,7 +65,7 @@ def main():
         #the main advantage of doing this in the main thread is that the screenshot gets to be passed within here and doesnt get taken inside each of the managers
         HealthMgr.updateHP(getPlayerHealth(frame) or None)
         HealthMgr.updateShield(getPlayerShield(frame) or None)
-        #
+        # TODO: Crop the image and add the IOPI killname
         print("Health: " + str(HealthMgr.health))
         print("Shield: " + str(HealthMgr.shield))
         print("Kills: " + str(KillsMgr.killcount)) #IF THIS ISNT WORKING, ITS PROBABLY BECAUSE THE WRONG KILLNAME IS USED

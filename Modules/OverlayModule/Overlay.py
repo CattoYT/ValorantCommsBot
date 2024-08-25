@@ -11,7 +11,7 @@ def runChatThread(ChatReader):
     time.sleep(5)
 
 
-if __name__ == "__main__":
+def createAndInitOverlay():
     AgentTracker = OverlayUtils.ValorantAgentTracker()
     Overlay = qtOverlay.QTOverlay(agentTracker=AgentTracker)
     ChatReader = ChatModule(agentTracker=AgentTracker)
@@ -47,4 +47,9 @@ if __name__ == "__main__":
 # pls im desperate rn
 
 
-
+# Current plan:
+# 1. Create the health label object, with qlabel not initialized
+# 2. store all the information required for the qlabel in the health label object, but only initiate when the agents have been initially detected
+# 3. Lock the set geometry to the x coord of the agent
+# 4. If the agent is dead, yeet the label
+# 5. When the agent is alive and offset, use the properties of the parent Agent class to setgeometry to the correct position
