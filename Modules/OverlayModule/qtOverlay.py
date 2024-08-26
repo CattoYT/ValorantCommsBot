@@ -25,7 +25,7 @@ class Worker(QObject):
         #self.update_label_signal.emit(agent, value)
 
 global overlay, worker, label1, label2, label3, label4, label5
-worker = Worker()
+
 
 
 class QTOverlay:
@@ -34,6 +34,8 @@ class QTOverlay:
 
 
     global worker
+    def getWorker(self):
+        return worker
     def setup_overlay(self):
         global overlay, worker, label1, label2, label3, label4, label5
 
@@ -46,42 +48,21 @@ class QTOverlay:
         overlay.setGeometry(0, 0, 1536, 834)
 
         # Instantiate HealthLabel instances
-        label1 = HealthLabel(overlay, 150, 0)
-        label2 = HealthLabel(overlay, 150, 1)
-        label3 = HealthLabel(overlay, 150, 2)
-        label4 = HealthLabel(overlay, 150, 3)
-        label5 = HealthLabel(overlay, 150, 4)
+        # label1 = HealthLabel(overlay, 150, 0)
+        # label2 = HealthLabel(overlay, 150, 1)
+        # label3 = HealthLabel(overlay, 150, 2)
+        # label4 = HealthLabel(overlay, 150, 3)
+        # label5 = HealthLabel(overlay, 150, 4)
+        for agent in self.agentTracker.validAgentsR:
+            agent.createLabel(overlay, True)
 
 
-        # Worker and thread setup
-        worker_thread = QThread()
-        worker.moveToThread(worker_thread)
 
-        # Connect signals to the slot that updates labels
-        worker.update_label_signal.connect(lambda index, value: self.update_label(index, value))
-        worker.updateLabelPositionSignal.connect(lambda index, value: self.updateLabelPosition(index, value))
 
-        worker_thread.start()
+
+
         overlay.show()
         sys.exit(app.exec())
-    def updateLabelPosition(self, index, value):
-        labels = [label1, label2, label3, label4, label5]
-
-        print(index, value)
-        index-=1
-        if 0 <= index < len(labels):
-            labels[index].updateLabelPosition(value)
-
-    # This function will update the label with the given index. If passed an agent object, it will get the information from the agent at that position and then update the label.
-    def update_label(self, index, value):
-        print("AAA")
-        labels = [label1, label2, label3, label4, label5]
-
-        print(index, value)
-        index-=1
-        if 0 <= index < len(labels):
-            labels[index].updateLabel(str(int(labels[index].label.text()) - int(value)))
-
 
 
 

@@ -46,8 +46,7 @@ class ChatModule:
     def __init__(self, RoundPhaseManager=None, agentTracker=None):
 
         # for this init, PLEASE JUST PASS INSTANCES DO NOT LET THIS FILE MAKE THEM ITSELF BECAUSE I HAVE NO FUCKIN CLUE IF IT WORKS
-        from qtOverlay import worker
-        self.worker = worker
+
 
         if not RoundPhaseManager:
             from Modules.Managers.RoundPhaseManager import RPManager
@@ -83,6 +82,11 @@ class ChatModule:
     # This is the main function for this class, where it reads the chat and sends the message to the server
     # It also runs the worker function.
     def updateChat(self):
+        """
+    This is the main function for the chatting manager, where it reads the chat and sends the message to the server
+    It also runs the worker function and updates the health labels
+        :return:
+        """
         data = self.readChat()
 
 
@@ -122,7 +126,10 @@ class ChatModule:
 
                 if numbers:
                     print("Updating label... " + str(numbers[0]))
-                    self.worker.update_label(agentObj.currentPosition, int(numbers[0]))  # Update the first label (index 0)
+                    desiredVal = str(int(agentObj.getLabel().label.text()) - int(numbers[0]))
+                    agentObj.getLabel().updateLabel(desiredVal)
+
+                    #self.worker.update_label(agentObj.currentPosition, int(numbers[0]))  # Update the first label (index 0)
                     pass
                 # END OF SHITTY SECTION
 
@@ -156,7 +163,7 @@ def ChatModuleDeprecated():
     RPMgr = RPManager()
     RPMgr.beginDetection()
     while True:
-        data = readChat()
+        data = None #readChat() # Removes errors this actually does nothing
 
 
         if not data:

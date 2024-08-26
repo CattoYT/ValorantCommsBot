@@ -21,26 +21,34 @@ from PyQt6.QtCore import Qt
 
 class HealthLabel:
     def __init__(self, parentWindow, initialValue=150, offset=0, initNow=True):
-        self.parentWindow = QLabel(parentWindow)
+        self.parentWindow = parentWindow
         self.initialValue = initialValue
         self.offset = offset
         if initNow:
-            self.createLabel() # Comment this out after ive migrated (EXPLANATION IN OVERLAY.PY LOOK AT THE BOTTOM)
+            self.label = QLabel(parentWindow)
+            self.label.setText(str(initialValue))
+            self.label.setStyleSheet(
+                "font-family: 'JetBrains Mono'; font-size: 14pt; font-style: italic; color: white; background-color: rgba(0, 0, 0, 0);")
+            self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+            self.label.setGeometry(882 + (self.offset * 52), 69, 38, 18)
 
     def createLabel(self):
         self.label = QLabel(self.parentWindow)
         self.label.setText(str(self.initialValue))
         self.label.setStyleSheet("font-family: 'JetBrains Mono'; font-size: 14pt; font-style: italic; color: white; background-color: rgba(0, 0, 0, 0);")
         self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        self.label.setGeometry(934 + (self.offset * 52), 69, 38, 18)
+        self.label.setGeometry(882 + (self.offset * 52), 69, 38, 18)
 
     def updateLabel(self, value):
         print("Desired value: " + value)
         self.label.setText(str(value))
+        self.updateLabelPosition(value)
 
-    def updateLabelPosition(self, value):
+    def updateLabelPosition(self, currentPosition):
         print("Updating label position")
-        self.label.setGeometry(934 + (self.offset * 52), 69+value, 38, 18)
+        self.offset = currentPosition
+        self.label.setGeometry(882 + (int(currentPosition) * 52), 69, 38, 18) # apparently currentposition is a string?? TODO: look into this
+        # TODO: The offsetting makes it disappear????
 
 class Agent(object):
     def __init__(self, name, baseposition, side, health : int):
@@ -54,8 +62,8 @@ class Agent(object):
         self.health = health
 
     #HEAVY BETA CODE PLEASE TOUCH WITH CAUTION
-    def createLabel(self, parentWindow):
-        self.healthLabel = HealthLabel(parentWindow, self.health, self.baseposition, False)
+    def createLabel(self, parentWindow, initNow):
+        self.healthLabel = HealthLabel(parentWindow, self.health, self.baseposition, initNow)
 
     def getLabel(self):
         return self.healthLabel # redundant but hey im used to java and it might be cleaner when i eventually forget
@@ -75,6 +83,14 @@ class Agent(object):
             "side": self.side,
 
         }
+
+    def setPosition(self, position):
+        self.currentPosition = position
+        try:
+            self.label.healthLabel.updateLabelPosition(self.currentPosition)
+        except AttributeError:
+            print("Label not created yet.")
+            # This is because the overlay hasnt properly been started, and can likely be ignored. COME BACK TO ME THOUGH
 
 class ValorantAgentTracker:
     def __init__(self):
@@ -192,7 +208,7 @@ class ValorantAgentTracker:
 
         if dead_agent:
             dead_agent.health = 0
-            dead_agent.currentPosition = None  # Mark the agent as dead
+            dead_agent.setPosition(None)  # Mark the agent as dead
             validAgents.remove(dead_agent)
             validAgents.append(dead_agent)  # Move the dead agent to the end
             print(f"Agent {dead_agent.originalName} is dead and moved to the end.")
@@ -205,7 +221,7 @@ class ValorantAgentTracker:
 
             try:
                 agent = all_agents[current_name]
-                agent.currentPosition = i
+                agent.setPosition(i)
                 print(f"Agent {agent.originalName} moved to position {i}.")
             except KeyError:
                 print(f"Agent {current_name} not found in active agents.")

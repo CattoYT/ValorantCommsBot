@@ -36,7 +36,8 @@ def createAndInitOverlay():
         #                 break
 
         time.sleep(5)
-
+if __name__ == "__main__":
+    createAndInitOverlay()
 # currently, the code does successfully overlay the damage numbers.
 # The only component that is left to work on in the overlay module is the offsetting of labels on agent death
 # My current ideas thrown are:

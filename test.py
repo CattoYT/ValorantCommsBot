@@ -1,112 +1,85 @@
-# # import time
-# #
-# # import cv2
-# # import numpy as np
-# # from PIL import Image
-# # import speaker as spk
-# # import detectors
-# #
-# # from ultralytics import YOLO
-# # # - = enemy
-# # # roboflow is an end to end = teammate
-# # # exportd via roboflow = planted spike
-# # # valorant = unplanted spike
-# #
-# # model = YOLO("Models/best.pt")
-# # cooldown = 0
-# # while True:
-# #     results = model(detectors.capture_screenshot(), conf=0.60)
-# #
-# #     detections = results[0].boxes
-# #     class_ids = detections.cls.cpu().numpy() if detections.cls is not None else []  # thanks copilot
-# #     detected = 0
-# #     for class_id in class_ids:
-# #         if class_id == 1.0:
-# #             detected += 1
-# #
-# #
-# #
-# #     if detected >= 1:
-# #         print("Heeh")
-# #         if time.time() - cooldown > 30: # 30 seconds
-# #             cooldown = time.time()
-# #             spk.sayVoice(r"D:\Coding\python\ValorantCommsBot\voices\mio\new-round\respawn - more_enemies_what_do_we_do.wav")
-#
-# import requests
-#
-# from PIL import Image
-# import numpy as np
-# import io
-# from mss.windows import MSS as mss
-#
-#
-# sct = mss()
-# def capture_screenshot():
-#     region = sct.grab(sct.monitors[2])
-#     region = Image.frombytes('RGB', region.size, region.bgra, 'raw', 'BGRX')
-#     #region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
-#     # screenshot = Image.open('testimage.png')
-#
-#     return region
-#
-# def hello():
-#     while True:
-#
-#         imagedata = capture_screenshot()
-#
-#         # Convert the image to a byte array
-#         buffered = io.BytesIO()
-#         imagedata.save(buffered, format="JPEG")
-#
+import sys
+import threading
+import time
 
-#         img_bytes = buffered.getvalue()
-#
-#         # Send the byte array in a POST request
-#         response = requests.post("https://cheaply-caring-pup.ngrok-free.app/inference", data=img_bytes)
-#
-#         print(response.text)
-# hello()
-#
-#
-#
-# import keyboard
-# import time
-# pressedKeys = []
-# while True:
-#
-#
-#     for key in keyboard._:
-#         pressedKeys.append(key)
-#         print(key)
-#         keyboard.keyUp(key)
-#     keyboard.press('enter')
-#     keyboard.release('enter')
-#     time.sleep(1)
-#
-#
-#     keyboard.press('enter')
-#     keyboard.release('enter')
-#
-#
-#
-#     print(pressedKeys)
-#     for key in pressedKeys:
-#
-#         keyboard.keyDown(key)
-#     time.sleep(5)
-#
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
 
-import RustModules
+from Modules.OverlayModule.OverlayUtils import HealthLabel
 
-from PIL import Image
-import io
 
-image = Image.open("img_1.png")
-with io.BytesIO() as output:
-    image.save(output, format="PNG")
-    listfun = RustModules.readChat(output.getvalue())
-    for i in listfun:
-        print("Channel: " + i.channel)
-        print("user: " + i.user)
-        print("message: " + i.line)
-        print(i.raw())
+# Worker object and signals are done by chatgpt,I couldn't find out how this works and i couldn't find the docs :/
+
+
+
+class Worker(QObject):
+    update_label_signal = pyqtSignal(int, int)  # Signal to update label (index, value)
+    updateLabelPositionSignal = pyqtSignal(int, int)  # Signal to update label position (index, value)
+    def __init__(self):
+        super().__init__()
+
+    def update_label(self, index, value):
+        self.update_label_signal.emit(index, value)
+
+global overlay, worker, label1, label2, label3, label4, label5
+worker = Worker()
+
+
+class QTOverlay:
+    def __init__(self, agentTracker=None):
+        self.agentTracker = agentTracker
+
+
+    global worker
+    def getWorker(self):
+        return worker
+    def setup_overlay(self):
+        global overlay, worker, label1, label2, label3, label4, label5
+
+        app = QApplication(sys.argv)
+
+        overlay = QWidget()
+        overlay.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+        overlay.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        overlay.setGeometry(0, 0, 1536, 834)
+
+        # Instantiate HealthLabel instances
+        label1 = HealthLabel(overlay, 150, 0)
+        label2 = HealthLabel(overlay, 150, 1)
+        label3 = HealthLabel(overlay, 150, 2)
+        label4 = HealthLabel(overlay, 150, 3)
+        label5 = HealthLabel(overlay, 150, 4)
+
+
+
+
+        # Worker and thread setup
+        worker_thread = QThread()
+        worker.moveToThread(worker_thread)
+
+        # Connect signals to the slot that updates labels
+        worker.update_label_signal.connect(lambda index, value: self.update_label(index, value))
+        worker.updateLabelPositionSignal.connect(lambda index, value: self.updateLabelPosition(index, value))
+
+        worker_thread.start()
+        overlay.show()
+        sys.exit(app.exec())
+
+
+
+
+
+    def startSetup(self):
+        global worker
+        threading.Thread(target=self.setup_overlay, daemon=True).start()
+
+
+
+if __name__ == "__main__":
+    overlay = QTOverlay()
+    overlay.startSetup()
+    while True:
+        time.sleep(5)
+        label5.updateLabel(str(600))
+        print("he")
