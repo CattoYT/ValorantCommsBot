@@ -10,6 +10,7 @@ As of writing, Python 3.13 isn't out, but will be within the year. I plan on mig
 This is mainly to clean up the shitty multiprcessing code i've written, and will hopefully be faster when starting up different modules such as the EnemyManager. When this happens, it will definitely take a massive refactor tho lol
 
 
+
 Fun note: Google colab doesn't seem to allow me to change the save directory when exporting ipynbs   
 A lot of ipynbs will be in the root directory for now, but they will be moved eventually (they wont probably)
 
@@ -26,6 +27,11 @@ This will be a thing until my model finishes training and I will be providing th
 
 Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager in main.py for a somewhat decent (yet small) release.
 
+The bot currently has a few modules working, and some that aren't. Particularly:
+- The overlay is currently my focus as of 27/8/24
+- EnemyManager requires a model, but works
+
+Other modules should be working perfectly in main.py
 
 ## Acknowledgements
 
