@@ -36,7 +36,7 @@ class KillsManager(BaseLiveManager):
         :return:
         """
         while not self.stopEvent.is_set():
-            self.killcountV.value = detectors.getKills(me=True)
+            self.killcountV.value = detectors.getKills(name="me")
 
 
 
