@@ -7,11 +7,21 @@ from Chat import ChatModule
 
 
 def runChatThread(ChatReader):
-
+    """
+    WIP, may not even be necessary
+    :param ChatReader:
+    :return:
+    """
     time.sleep(5)
 
 
 def createAndInitOverlay():
+    """
+    Main function for the overlay. Should be run on its own, and shouldn't need anything else?
+    Probably should also be in its own thread.
+    Time interval of 4.5Secs
+    :return:
+    """
     AgentTracker = OverlayUtils.ValorantAgentTracker()
     Overlay = qtOverlay.QTOverlay(agentTracker=AgentTracker)
     ChatReader = ChatModule(agentTracker=AgentTracker)

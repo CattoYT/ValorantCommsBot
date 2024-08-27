@@ -15,6 +15,10 @@ class Worker(QObject):
     update_label_signal = pyqtSignal(int, int)  # Signal to update label (index, value)
     updateLabelPositionSignal = pyqtSignal(int, int)  # Signal to update label position (index, value)
     def __init__(self):
+        """
+        Deprecated. This only exists because I got gaslit by copilot. No usages and can be removed
+        TODO: Remove this
+        """
         super().__init__()
 
     def update_label(self, index, value):
@@ -35,8 +39,17 @@ class QTOverlay:
 
     global worker
     def getWorker(self):
+        """
+        Deprecated. This only exists because I got gaslit by copilot. No usages and can be removed
+        :return:
+        """
         return worker
     def setup_overlay(self):
+        """
+        Starts the qt overlay side, it also initiates the labels in each of the agents in agentTracker.validAgentsR. This should be run after the
+        agents have been set initially
+        :return:
+        """
         global overlay, worker, label1, label2, label3, label4, label5
 
         app = QApplication(sys.argv)

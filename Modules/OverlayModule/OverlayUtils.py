@@ -21,6 +21,18 @@ from PyQt6.QtCore import Qt
 
 class HealthLabel:
     def __init__(self, parentWindow, initialValue=150, offset=0, initNow=True):
+        """
+        Object that represents the health label for each agent in the top bar. This is used within the Agent class, and is accessed from Agent.getLabel()
+        Contains the health and qtlabel information
+        QTLabel should be aquired from HealthLabel.label
+
+        Offset and currentPosition are WIP
+
+        :param parentWindow:
+        :param initialValue:
+        :param offset:
+        :param initNow:
+        """
         self.parentWindow = parentWindow
         self.initialValue = initialValue
         self.offset = offset
@@ -33,6 +45,10 @@ class HealthLabel:
             self.label.setGeometry(882 + (self.offset * 52), 69, 38, 18)
 
     def createLabel(self):
+        """
+        Initializes the label
+        :return:
+        """
         self.label = QLabel(self.parentWindow)
         self.label.setText(str(self.initialValue))
         self.label.setStyleSheet("font-family: 'JetBrains Mono'; font-size: 14pt; font-style: italic; color: white; background-color: rgba(0, 0, 0, 0);")
@@ -40,18 +56,36 @@ class HealthLabel:
         self.label.setGeometry(882 + (self.offset * 52), 69, 38, 18)
 
     def updateLabel(self, value):
+        """
+        Updates the label health, and calls for a position update
+        :param value:
+        :return:
+        """
         print("Desired value: " + value)
         self.label.setText(str(value))
         self.updateLabelPosition(value)
 
     def updateLabelPosition(self, currentPosition):
+        """
+        Updates the label position. Kinda an internal method but can be used outside if an update is required
+        :param currentPosition:
+        :return:
+        """
         print("Updating label position")
         self.offset = currentPosition
         self.label.setGeometry(882 + (int(currentPosition) * 52), 69, 38, 18) # apparently currentposition is a string?? TODO: look into this
         # TODO: The offsetting makes it disappear????
-
+# TODO: SPEND A SESSION ON DOCUMENTATION USING PYCHARM'S DOCSTRINGS I HAVE AN EXAMPLE IN ChatModule.updateChat
 class Agent(object):
     def __init__(self, name, baseposition, side, health : int):
+        """
+        Object that represents each agent in the top bar. This contains the health label as well, which is accessed from Agent.getLabel()
+
+        :param name:
+        :param baseposition:
+        :param side:
+        :param health:
+        """
         self.originalName = name
         self.name = name
         self.baseposition = baseposition
@@ -63,9 +97,19 @@ class Agent(object):
 
     #HEAVY BETA CODE PLEASE TOUCH WITH CAUTION
     def createLabel(self, parentWindow, initNow):
+        """
+
+        :param parentWindow:
+        :param initNow:
+        :return:
+        """
         self.healthLabel = HealthLabel(parentWindow, self.health, self.baseposition, initNow)
 
     def getLabel(self):
+        """
+        Returns the HealthLabel that is associated with the agent
+        :returns: HealthLabel
+        """
         return self.healthLabel # redundant but hey im used to java and it might be cleaner when i eventually forget
 
     def __str__(self):
@@ -85,8 +129,15 @@ class Agent(object):
         }
 
     def setPosition(self, position):
+        """
+        A method that sets the position of the agent. This will automatically call the label position updater
+
+        :param position:
+        :return:
+        """
         self.currentPosition = position
         try:
+            # Should work properly, might want to check
             self.label.healthLabel.updateLabelPosition(self.currentPosition)
         except AttributeError:
             print("Label not created yet.")
@@ -95,6 +146,9 @@ class Agent(object):
 class ValorantAgentTracker:
     def __init__(self):
         # Dictionary of agents and their associated colors
+        """
+        Main object that tracks all agents.
+        """
         self.valorantAgents = {
             (79, 61, 59): "Astra",
             (189, 154, 132): "Breach",
@@ -135,6 +189,12 @@ class ValorantAgentTracker:
             self.validAgentsR.append(Agent(R[i], i, "R", 150))
 
     def getAgentObject(self, name, team="R"):
+        """
+        Returns the agent object based on the name and team provided. Team is optional and defaults to R
+        :param name:
+        :param team:
+        :return:
+        """
         if team == "L":
             validAgents = self.validAgentsL
         elif team == "R":
@@ -149,6 +209,11 @@ class ValorantAgentTracker:
         return
 
     def checkFiles(self):
+        """
+        Checks all the files in the "Correct Agents" directory and prints the agent name. They should ALL have an agent.
+        This function is also deprecated until new valorant agents get released since I have already done all 24. Vyse will be added when she is released.
+        :return:
+        """
         # Iterate through every image in the "Correct Agents" directory
         for file in os.listdir("debugging-images/ValorantUI/Correct Agents"):
             f = os.path.join("debugging-images/ValorantUI/Correct Agents", file)
@@ -158,6 +223,13 @@ class ValorantAgentTracker:
             print(agent)
 
     def getAgent(self, position, team="L", screenshot=None):
+        """
+        Returns the agent at the specified position. This is 1 indexed. position 1 on team 1 gives the far left agent, and same with the right team.
+        :param position:
+        :param team:
+        :param screenshot:
+        :return:
+        """
         # position is 1 indexed.
         if team == "L":
             offsetX = 380 + (int(position) * 66)
@@ -181,6 +253,11 @@ class ValorantAgentTracker:
         return agent
 
     def getAllAgents(self, screenshot=None):
+        """
+        Returns all the agents on the screen.
+        :param screenshot:
+        :return: Dict, Dict
+        """
         positionsL = {i: "" for i in range(1, 6)}
         positionsR = {i: "" for i in range(1, 6)}
 
@@ -196,6 +273,14 @@ class ValorantAgentTracker:
     # not gonna lie, looking back, no fuckin clue how this works
 
     def reorganizeAgents(self, validAgents, updatedPositions):
+        """
+        This is the main function for reorganising the agents stored in one of the dicts/
+        This updates the given side of the dict, pushing the values towards the middle depending on the state.
+
+        :param validAgents:
+        :param updatedPositions:
+        :return:
+        """
         updated_agents = set(updatedPositions.values())  # Agents currently detected
         all_agents = {agent.name: agent for agent in validAgents if agent.currentPosition is not None}
 
@@ -227,6 +312,10 @@ class ValorantAgentTracker:
                 print(f"Agent {current_name} not found in active agents.")
 
     def updateAgentPositions(self):
+        """
+        This is the function that updates all agents in both teams. This is the main function, and is preferred over the other one
+        :return:
+        """
         screenshot = capture_screenshot()
         L, R = self.getAllAgents(screenshot)
         self.reorganizeAgents(self.validAgentsL, L)
@@ -237,7 +326,6 @@ class ValorantAgentTracker:
         for agent in self.validAgentsR:
             print(agent.Info())
 
-        time.sleep(5)
 
 
 if __name__ == "__main__":

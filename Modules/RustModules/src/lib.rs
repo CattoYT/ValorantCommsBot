@@ -8,9 +8,9 @@ use rusty_tesseract::{Args, Image};
 
 #[pyfunction]
 fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
-    
-    let img = load_from_memory(img.as_bytes()).unwrap();
 
+    //The image is saved into memory from io.bytesio, so it can be loaded as a png
+    let img = load_from_memory(img.as_bytes()).unwrap();
     let my_args = Args {
         lang: "eng".to_string(), 
         config_variables: HashMap::from([(
@@ -23,11 +23,11 @@ fn readChat(py: Python,img: &PyBytes) -> PyResult<PyObject> {
     };
     let fussyImg = Image::from_dynamic_image(&img).unwrap();
     let output = rusty_tesseract::image_to_string(&fussyImg, &my_args).unwrap(); //Compile with --release so that this doesn't put the command in the console
+
+
     let valorant_chat_class: &PyAny = py.import("Modules.OverlayModule.Chat")?.getattr("ValorantChat").unwrap();
 
     let chatHistory = PyList::empty(py);
-
-
     let mut channel = String::new();
 
         //this is shitcode produced from me not knowing how to write rust

@@ -9,17 +9,34 @@ import detectors
 
 
 class ValorantChat:
+
     def __init__(self, channel, user, line):
+        """
+        A class that represents a single chat message in Valorant. Formatting is also maintained.
+        :param channel:
+        :param user:
+        :param line:
+        """
         self.channel = channel
         self.user = user
         self.line = line
 
     def Empty(self):
+        """
+        Represents an empty object, or clears the current one.
+        When called statically, it creates an empty object, but when called from an instance, it WILL EMPTY IT PLEASE DON'T ACIDENTALLY USE THIS
+        //No idea if statically is the best way to describe it but hey im an idiot
+        :return:
+        """
         self.channel = ""
         self.user = ""
         self.line = ""
 
     def json(self):
+        """
+        Returns the valorant chat object as a json for reconstruction
+        :return: Json.dumps
+        """
         return json.dumps(
             {
                 "channel": self.channel,
@@ -44,7 +61,12 @@ import re
 
 class ChatModule:
     def __init__(self, RoundPhaseManager=None, agentTracker=None):
-
+        """
+        Main manager for the chat, reads it, processes it, and acts on it.
+        Ideally the args should be passed, cuz letting it create its own instances is a bad idea and untested
+        :param RoundPhaseManager:
+        :param agentTracker:
+        """
         # for this init, PLEASE JUST PASS INSTANCES DO NOT LET THIS FILE MAKE THEM ITSELF BECAUSE I HAVE NO FUCKIN CLUE IF IT WORKS
 
 
@@ -65,6 +87,10 @@ class ChatModule:
 
     def readChat(self):
         # This one runs on a 5 second delay, might be able to run it with KillsManager
+        """
+        Internal function, mostly just prepares the data for the rust code to do its work
+        :return:
+        """
         screenshot = detectors.capture_screenshot()
         region_x = 10  # X-coordinate of the top-left corner of the region
         region_y = 804  # Y-coordinate of the top-left corner of the region
@@ -84,8 +110,8 @@ class ChatModule:
     def updateChat(self):
         """
     This is the main function for the chatting manager, where it reads the chat and sends the message to the server
-    It also runs the worker function and updates the health labels
-        :return:
+    It also runs the health labels updater
+        :return: None
         """
         data = self.readChat()
 
