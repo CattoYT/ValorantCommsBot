@@ -8,6 +8,7 @@ import numpy as np
 from mss.windows import MSS as mss
 from PIL import Image
 import speaker as spk
+from Modules.BaseLiveManager import BaseLiveManager
 
 
 # The current dilemma with this module is that Valorant already has something like it whith the agent callouts
@@ -16,18 +17,30 @@ import speaker as spk
 
 
 
-class EnemyManager:
+class EnemyManager(BaseLiveManager):
     def __init__(self, visualize=False):
+        """
+        This class is the main module for detecting the enemies. Ideally a YOLOv8 model should be used for this, but its still cooking
+        and im not going to finish cooking it.
+        Please run this using the
+        :param visualize: Boolean
+        """
         self.visualize = visualize
         self.stopEvent = Event()
-        self.monitorProcess = None
-        self.model = None
+        self.monitorProcess = self.yoloV8Detection # self.findEnemy can be used for yolov5, legacy tho
+        self.model = None # set to none just in case, generally will be initialized by the yolo function
         self.enemyCount = Value('i', 0)
 
 
 
 
     def findEnemy(self):
+        """
+        This function is the main function for detecting enemies. It uses a YOLOv5 model to detect enemies.
+        Currently deprecated in favour of yoloV8Detection
+
+        :return:
+        """
 
         if self.model == None:
             import torch
@@ -62,6 +75,8 @@ class EnemyManager:
             # thanks copilot for this lol
             if self.visualize:
                 cv2.namedWindow("Detection", cv2.WINDOW_NORMAL)
+
+                img = None # hey, i dont use this but i might later
                 img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
                 for det in results.pred[0]:
@@ -103,21 +118,13 @@ class EnemyManager:
         img = Image.fromarray(img_np)
         return img
 
-    def recordScreen(self): # will implement later
-
-        with mss() as sct:
-            # cap my first monitor
-            monitor = sct.monitors[2]
-
-            while True:
-                cv2.namedWindow("Detection", cv2.WINDOW_NORMAL)
-
-
-                sct_img = sct.grab(monitor)
-                img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
 
 
     def yoloV8Detection(self):
+        """
+        Main detection loop for YOLOv8. Detects enemies, and plays the voice line if an enemy is detected.
+        :return:
+        """
         # This needs to run as fast as possible cuz valorant is fast asf
         import logging
 
@@ -161,33 +168,6 @@ class EnemyManager:
 
 
 
-
-    def beginYoloV8Detection(self):
-
-
-        if self.monitorProcess is None or not self.monitorProcess.is_alive():
-            self.monitorProcess = Process(target=self.yoloV8Detection)
-            self.monitorProcess.daemon = True
-            self.monitorProcess.start()
-            return
-
-
-        return
-
-
-
-    def beginDetection(self):
-
-
-        if self.monitorProcess is None or not self.monitorProcess.is_alive():
-            self.monitorProcess = Process(target=self.findEnemy)
-            self.monitorProcess.daemon = True
-            self.monitorProcess.start()
-            return
-
-
-        return
-
 if __name__ == "__main__":
     em = EnemyManager(visualize=True)
-    em.yoloV8Detection()
+    em.beginDetection()

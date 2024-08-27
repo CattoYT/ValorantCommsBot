@@ -16,6 +16,10 @@ from Modules.BaseLiveManager import BaseLiveManager
 
 class KillsManager(BaseLiveManager):
     def __init__(self):
+        """
+        A manager that monitors the player's kills and plays voice lines based on the kills
+        This should be safe to be left alone.
+        """
         super().__init__()
         self.killcountV = Value('i', 0) # I swear i keep forgetting to do this
         self.liveProcess = self.monitorKills
@@ -26,6 +30,11 @@ class KillsManager(BaseLiveManager):
         return self.killcountV.value
 
     def monitorKills(self):
+        """
+        This is the liveProcess for the KillsManager, should be safe to loop
+        Makes use of detectors.getKills
+        :return:
+        """
         while not self.stopEvent.is_set():
             self.killcountV.value = detectors.getKills(me=True)
 

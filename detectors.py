@@ -24,6 +24,11 @@ from Modules import utils
 sct = mss()
 
 def capture_screenshot():
+    '''
+    Captures a screenshot of the game window
+
+    :return: Screenshot as a PIL Image object
+    '''
     region = sct.grab(sct.monitors[2])
     region = Image.frombytes('RGB', region.size, region.bgra, 'raw', 'BGRX')
     #region = pyautogui.screenshot(region=(0, 0, 1920, 1080))
@@ -39,7 +44,12 @@ def read_text(image):
 
 
 def getPlayerHealth(screenshot):
-
+    """
+    Gets the player's health from a passed screenshot. This will preprocess the screenshot and crop it, then read the text from it.
+    Color is based from the yellow threshhold (about 60 i think), and white.
+    :param screenshot:
+    :return: Player health as a string
+    """
     #after about 2 hours of suffering, i have concluded that im just going to ahve both systems. if it fails both times, then oh well the player is prob dead
     # i would recommend this code to never be touched again, it works and i dont want to break it
     region_x = 574
@@ -76,6 +86,11 @@ def getPlayerHealth(screenshot):
 
 def getPlayerShield(screenshot):
     # Shield location
+    """
+    Preprocesses a given screenshot and crops it to find a player's shield.
+    :param screenshot: UNCROPPED
+    :return: Player's shield as a string
+    """
     region_x = 545  # X-coordinate of the top-left corner of the region
     region_y = 1018  # Y-coordinate of the top-left corner of the region
     region_width = 19  # Width of the region
@@ -97,6 +112,15 @@ def getPlayerShield(screenshot):
 
 #scans coords with color (checks if any teammates are dead)
 def getDeaths(screenshot):
+    """
+    This will crop the screenshot to the top right, where the kill feed is present.
+    This will check if any teammates are dead by checking for the color of the kill feed. Specifically for the greeny blue teal color.
+
+    This is currently deprecated.
+    If future me ever returns to this, please change the return values
+    :param screenshot:
+    :return: True if any teammates are dead, False if no teammates are dead
+    """
     region_x = 1764    # X-coordinate of the top-left corner of the region
     killfeedYCoords = [96, 135, 174, 213, 252, 291]   #
     region_width = 72   # Width of the region
@@ -125,6 +149,14 @@ def getDeaths(screenshot):
 
 #checks for appearances of my name in the area where kills should be
 def getKills(name="me"): # me is cuz i sometimes use name hider lol
+    """
+    This will check the top right killfeed for the appearance of a given name.
+    This uses pyautogui.locateallonscreen to find the name in the killfeed.
+
+    If this ever needs a speedup, refer to: https://stackoverflow.com/questions/42973863/how-can-i-locate-something-on-my-screen-quickly-in-python
+    :param name: Name to check for <me, iopi, serene>
+    :return: List of kills
+    """
     region_x = 1244   # X-coordinate of the top-left corner of the region
     region_y = 93  # Y-coordinate of the top-left corner of the region
     region_width = 537 # Width of the region
@@ -135,7 +167,7 @@ def getKills(name="me"): # me is cuz i sometimes use name hider lol
     elif name == "iopi":
         matches = pyautogui.locateAllOnScreen('debugging-images/killnames/iopi.png', grayscale=True, confidence=0.8, region=(region_x, region_y, region_width, region_height))
 
-    elif name == "Serene":
+    elif name == "serene":
         # fun easter egg about this image, it was taken on Breeze T side spawn and the rock texture keeps messing up detections i think
         matches = pyautogui.locateAllOnScreen('debugging-images/killnames/Serene.png', grayscale=True,confidence=0.8, region=(region_x, region_y, region_width, region_height))
     else:
@@ -148,6 +180,15 @@ def getKills(name="me"): # me is cuz i sometimes use name hider lol
 
 
 def getAlive():
+    """
+    This uses pyautogui.locateonscreen to see if the combat report is visible on my screen.
+
+    This does have the problem of false flagging when the combat report is open in buy phase.
+    To work around this, this function should be changed to check if the text "change player" is visible on the screen cuz
+    that only appears when spectating and dead.
+    Use tesseract for that.
+    :return: Boolean
+    """
     #the images used here LITERALLY JUST GOT CHANGED IN THE LAST PATCH LMAO
     #The new image uses pyautogui instead of pytesseract cuz the position changes and i really don't care enough
     # This gets my alive from the combat report, might migrate to the switch player screen instead
@@ -169,18 +210,13 @@ def getAlive():
 
 
 def getWinLoss():
+    """
+    Checks if the game is won or loss.
+    Completely deprecated, do not use.
+    Its also missing an image xd
+    :return:
+    """
     if pyautogui.locateOnScreen('debugging-images/defeat.png', confidence=0.8):
         return False
     if pyautogui.locateOnScreen('debugging-images/victory.png', confidence=0.8):
         return True
-
-
-def checkEnemies():
-    # probably going to try using template matching to see which image is most like the ones detected in each position. The first ones detected will be their proper position, since their position is offset when a teammate dies
-    # When a teammate dies, iacan offset the corect position by the amount of teammates dead
-    # images will be taken from https://github.com/deepsidh9/Live-Valorant-Overlay/tree/main/app/templates/agent_templates
-    # this really should be done in a faster language i don't want to play valorant at 2 fps
-    for i in range(5):
-
-
-        pass

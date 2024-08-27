@@ -22,16 +22,17 @@ from PyQt6.QtCore import Qt
 class HealthLabel:
     def __init__(self, parentWindow, initialValue=150, offset=0, initNow=True):
         """
-        Object that represents the health label for each agent in the top bar. This is used within the Agent class, and is accessed from Agent.getLabel()
+        Object that represents the health label for each agent in the top bar.
+        This is used within the Agent class, and is accessed from Agent.getLabel()
         Contains the health and qtlabel information
         QTLabel should be aquired from HealthLabel.label
 
         Offset and currentPosition are WIP
 
-        :param parentWindow:
-        :param initialValue:
-        :param offset:
-        :param initNow:
+        :param parentWindow: QTWidget
+        :param initialValue: Initial health value as int
+        :param offset: Offset as int from 1
+        :param initNow: Boolean
         """
         self.parentWindow = parentWindow
         self.initialValue = initialValue
@@ -79,7 +80,8 @@ class HealthLabel:
 class Agent(object):
     def __init__(self, name, baseposition, side, health : int):
         """
-        Object that represents each agent in the top bar. This contains the health label as well, which is accessed from Agent.getLabel()
+        Object that represents each agent in the top bar.
+        This contains the health label as well, which is accessed from Agent.getLabel()
 
         :param name:
         :param baseposition:

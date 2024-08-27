@@ -20,6 +20,10 @@ import sounddevice as sd
 import soundfile as sf
 @app.route('/')
 def IMFUCKINGTALKING():
+    """
+    Function that is called per request. It will prevent people from queuing up events, and instead cancel overlapping ones.
+    :return:
+    """
     global someoneistalking
     scenario = request.args.get("scenario")
 

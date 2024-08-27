@@ -13,18 +13,32 @@ from Modules.BaseLiveManager import BaseLiveManager
 
 class RPManager(BaseLiveManager):
     def __init__(self):
+        """
+        Monitors the round phase, and plays voice lines based on the phase
+
+        """
         super().__init__()
         self.liveProcess = self.checkPhase
         self.currentPhaseState = Value('i', 0)
 
     @property
     def currentPhase(self): # written by copilot because damn i don't understand lambdas but eh cool
+        """
+        Returns the current phase as a string
+        :return:
+        """
         return {
             0: "Buy",
             1: "Combat"
         }.get(self.currentPhaseState.value, "Unknown")
 
     def checkPhase(self):
+        """
+
+        Checks the round phase if the buy phase text is at the top of the screen,
+        and changes if the round timer has at least 1 min on the clock
+        :return:
+        """
         region_x = 807
         region_y = 161
         region_width = 315

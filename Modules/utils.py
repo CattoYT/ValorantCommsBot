@@ -9,6 +9,11 @@ import requests
 
 
 def hex_to_rgb(hex_color):
+    """
+    Converts a hex color to an RGB tuple.
+    :param hex_color: #xxxxxx
+    :return:
+    """
     hex_color = hex_color.lstrip("#")
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
@@ -47,6 +52,11 @@ def rgb2HSV(r, g, b, bound, tolerance=0):
 
 
 def get_file_duration(file_path):
+    """
+    Returns the length of the file in seconds?
+    :param file_path:
+    :return: int? (I literally dont remembeer
+    """
     try:
         audio_info = sf.info(file_path)
         duration = audio_info.duration
@@ -56,12 +66,19 @@ def get_file_duration(file_path):
         return None
 
 def find_device_id(device_name):
+    """
+    Prints out audio device ids
+    For some reason, sounddevice truncates some values, so copium and use the lowest number that makes sense for your device
+    :param device_name:
+    :return:
+    """
     devices = sd.query_devices()
     for device in devices:
         if device['name'] == device_name:
             print(device['index'])
     return None
 
+#not documenting these they are self explanatory
 def isCudaAvailable():
     return torch.cuda.is_available()
 
@@ -70,6 +87,11 @@ def whatDevice():
 
 
 def showImage(image):
+    """
+    Creates a cv2 window of an image, and closes after "=" is pressed
+    :param image:
+    :return:
+    """
     while True:
 
         img = cv2.imread(image)
