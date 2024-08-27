@@ -21,6 +21,13 @@ Run the following (ideally in a venv):
 pip install -r requirements.txt
 ```
 
+Serverside ipynbs should be opened in Google Colab, and an NGROK token provided under the secret name "NGROKToken". The domains should be changed as well.   
+This is mainly for the LLM ipynb file.
+
+The overlay should be run from Overlay.py, and root directory from the content root. (Pycharm)   
+The overlay will work for 1920x1080 monitors at 125% scaling on windows, since that is what I run, but may need tweaking for other scalings and resolutions.   
+Aside from that, if the server is running and Valorant is in Borderless Windowed mode, it will show correctly!
+
 EnemyManager currently makes use of [YOLOv5](https://github.com/ultralytics/yolov5) models from [Leaf48](https://github.com/Leaf48/YOLO-Models-For-Valorant/tree/main/Yolov5/YOLOv5s)
 Please move them into this root folder and make sure the name matches in the torch.hub.load call in EnemyManager.py.
 This will be a thing until my model finishes training and I will be providing that as default in this repo!
@@ -32,6 +39,10 @@ The bot currently has a few modules working, and some that aren't. Particularly:
 - EnemyManager requires a model, but works
 
 Other modules should be working perfectly in main.py
+
+
+
+
 
 ## Acknowledgements
 
