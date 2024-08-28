@@ -1,6 +1,8 @@
 # ValorantCommsBot
 
-A valorant bot that can be used to automate communications using voice clips from different games.
+Have you ever wanted to communicate with your teammates in Valorant, but you're too scared or don't have a mic? Well, here ya go!
+
+This is a valorant bot that can be used to automate communications using voice clips from different games.
 This was written because I was bored + inspiration from SociallyIneptWeeb
 
 This bot was partially written because I hate talking in VC with random people, so why not spend half a year making a program to do it for me?
@@ -14,7 +16,7 @@ This is mainly to clean up the shitty multiprcessing code i've written, and will
 Fun note: Google colab doesn't seem to allow me to change the save directory when exporting ipynbs   
 A lot of ipynbs will be in the root directory for now, but they will be moved eventually (they wont probably)
 
-# Setup:
+# Setup and Usage:
 
 Run the following (ideally in a venv):
 ```
