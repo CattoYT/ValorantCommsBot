@@ -12,21 +12,21 @@ from Modules.utils import get_file_duration, find_device_id
 
 play_lock = threading.Condition() # this will work fine for 3.13, however, I can't use this rn because multiprocessing will dupilcate the lock :/
 
-def play_audio(file_path):
-    """
-    This is a function that SHOULD NOT EXIST BUT 3.13 ISNT HERE YET IS IT PLEASE RELEASE IT
-    It sends a get request to a localhost server (MultiprocessingIsAMistake.py) to play the audio file
-    This should be commented out when 3.13 is released
-    An internal function, wrapped from sayVoice.
-    :param file_path:
-    :return:
-    """
-
-    # see MultiprocessingIsAMistake.py for explanation
-    try:
-        requests.get("127.0.0.1:3000?scenario="+file_path)
-    except:
-        pass
+# def play_audio(file_path):
+#     """
+#     This is a function that SHOULD NOT EXIST BUT 3.13 ISNT HERE YET IS IT PLEASE RELEASE IT
+#     It sends a get request to a localhost server (MultiprocessingIsAMistake.py) to play the audio file
+#     This should be commented out when 3.13 is released
+#     An internal function, wrapped from sayVoice.
+#     :param file_path:
+#     :return:
+#     """
+#
+#     # see MultiprocessingIsAMistake.py for explanation
+#     try:
+#         requests.get("127.0.0.1:3000?scenario="+file_path)
+#     except:
+#         pass
 #
 def play_audio(file_path, volume=0.9):
     """

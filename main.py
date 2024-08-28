@@ -1,6 +1,7 @@
 import time
 from multiprocessing import Process
 
+from Modules.Managers.EnemyManager import EnemyManager
 from Modules.Managers.WinLossManager import WLManager
 
 from detectors import getPlayerHealth, getPlayerShield
@@ -36,6 +37,7 @@ def initModules():
     global KillsMgr
     global RPMgr
     global WLMgr
+    global EnemyMgr
     RecompileRust = False
     if RecompileRust:
         import CompileRust # Keep this as it is, cuz im pretty sure the code is executed regardless
@@ -46,6 +48,7 @@ def initModules():
         "KillsMgr": KillsManager,
         "RPMgr": RPManager,
         "WLMgr": WLManager,
+        "EnemyMgr": EnemyManager
     }
 
     for name, cls in activeModules.items():
@@ -72,7 +75,7 @@ def main():
         print("Phase: " + str(RPMgr.currentPhase)) #working
         print("Last Round: " + str(WLMgr.previousRoundResult)) #working
 
-        #print("Enemies: " + str(EnemyMgr.enemyCount)) # this line isn't really needed tbh
+        print("Enemies: " + str(EnemyMgr.enemyCount.value)) # this line isn't really needed tbh
         print("")
         isAlive = detectors.getAlive()
         if HealthMgr.health and not isAlive:
@@ -92,5 +95,5 @@ if __name__ == '__main__':
     from Modules import MultiprocessingIsAMistake
     import detectors
 
-    Process(target=MultiprocessingIsAMistake.start).start()
+    # Process(target=MultiprocessingIsAMistake.start).start()
     main()

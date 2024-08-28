@@ -18,16 +18,17 @@ from Modules.BaseLiveManager import BaseLiveManager
 
 
 class EnemyManager(BaseLiveManager):
-    def __init__(self, visualize=False):
+    def __init__(self, visualize=True):
         """
         This class is the main module for detecting the enemies. Ideally a YOLOv8 model should be used for this, but its still cooking
         and im not going to finish cooking it.
         Please run this using the
         :param visualize: Boolean
         """
+        super().__init__()
         self.visualize = visualize
         self.stopEvent = Event()
-        self.monitorProcess = self.yoloV8Detection # self.findEnemy can be used for yolov5, legacy tho
+        self.liveProcess = self.yoloV8Detection # self.findEnemy can be used for yolov5, legacy tho
         self.model = None # set to none just in case, generally will be initialized by the yolo function
         self.enemyCount = Value('i', 0)
 
@@ -132,7 +133,7 @@ class EnemyManager(BaseLiveManager):
 
         if self.model == None:
             import ultralytics
-            modelPath = "Models/epoch270.pt"
+            modelPath = "Models/best.pt"
             self.model = ultralytics.YOLO(modelPath)
             # converts the model to engine if it isnt already
             print(modelPath[:-3] + ".engine")
@@ -150,7 +151,6 @@ class EnemyManager(BaseLiveManager):
         cooldown = 0
         logging.getLogger('ultralytics').setLevel(logging.WARNING) #chatgpt'd because the documentation is kinda shit
         while not self.stopEvent.is_set():
-        #while True:
             screenshot = detectors.capture_screenshot()
             results = self.model(self.overlayCensor(screenshot), conf=0.70, device="0")
 
@@ -159,15 +159,16 @@ class EnemyManager(BaseLiveManager):
             detected = 0
             for class_id in class_ids:
                 if class_id == 1.0: # check if the class id is actually an enemy
+
                     detected += 1
 
             if detected >= 1:
                 if time.time() - cooldown > 30:  # 30 seconds
                     cooldown = time.time()
-                    spk.sayVoice("../../voices/mio/new-round/respawn - more_enemies_what_do_we_do.wav")
+                    spk.sayVoice(r"D:\Coding\python\ValorantCommsBot\voices\mio\new-round\respawn - more_enemies_what_do_we_do.wav")
 
 
 
 if __name__ == "__main__":
     em = EnemyManager(visualize=True)
-    em.beginDetection()
+    em.yoloV8Detection()
