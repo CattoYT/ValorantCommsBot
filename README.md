@@ -28,9 +28,8 @@ The overlay should be run from Overlay.py, and root directory from the content r
 The overlay will work for 1920x1080 monitors at 125% scaling on windows, since that is what I run, but may need tweaking for other scalings and resolutions.   
 Aside from that, if the server is running and Valorant is in Borderless Windowed mode, it will show correctly!
 
-EnemyManager currently makes use of [YOLOv5](https://github.com/ultralytics/yolov5) models from [Leaf48](https://github.com/Leaf48/YOLO-Models-For-Valorant/tree/main/Yolov5/YOLOv5s)
-Please move them into this root folder and make sure the name matches in the torch.hub.load call in EnemyManager.py.
-This will be a thing until my model finishes training and I will be providing that as default in this repo!
+EnemyManager now makes use of [YOLOv8](https://github.com/ultralytics/ultralytics) models from [Keremberke](https://huggingface.co/keremberke/yolov8m-valorant-detection)
+If you want to use your own model, just replace the model in the EnemyManager.py file. I recommend putting them in Models/YOLO.
 
 Some redundant code will be present, so just comment it out if you don't want to use it. I recommend commenting EnemyManager in main.py for a somewhat decent (yet small) release.
 
