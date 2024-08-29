@@ -27,25 +27,29 @@ def createAndInitOverlay():
     ChatReader = ChatModule(agentTracker=AgentTracker)
 
     Overlay.startSetup()
-
+    from win32gui import GetWindowText, GetForegroundWindow
     while True:
-        AgentTracker.updateAgentPositions()
-        ChatReader.updateChat()
-        #threading.Thread(target=runChatThread, args=(ChatReader,), daemon=True).start()
+        # image detection literally doesnt work
+        print(GetWindowText(GetForegroundWindow()))
+        while GetWindowText(GetForegroundWindow()) == "VALORANT  ":
+            AgentTracker.updateAgentPositions()
+            ChatReader.updateChat()
+            #threading.Thread(target=runChatThread, args=(ChatReader,), daemon=True).start()
 
 
-        # for this, i literally have no idea what to do, so im literally just going to yeet the label
-        # heavy beta, only uncomment when in use
-        # for agent in AgentTracker.validAgentsR:
-        #     if agent.currentPosition is not None:
-        #
-        #         labels = [qtOverlay.label1, qtOverlay.label2, qtOverlay.label3, qtOverlay.label4, qtOverlay.label5] # cursed but lolz
-        #         for i in labels:
-        #             if i.offset == agent.currentPosition:
-        #                 qtOverlay.worker(str(agent.health))
-        #                 break
+            # for this, i literally have no idea what to do, so im literally just going to yeet the label
+            # heavy beta, only uncomment when in use
+            # for agent in AgentTracker.validAgentsR:
+            #     if agent.currentPosition is not None:
+            #
+            #         labels = [qtOverlay.label1, qtOverlay.label2, qtOverlay.label3, qtOverlay.label4, qtOverlay.label5] # cursed but lolz
+            #         for i in labels:
+            #             if i.offset == agent.currentPosition:
+            #                 qtOverlay.worker(str(agent.health))
+            #                 break
 
-        time.sleep(5)
+            time.sleep(5)
+        print("Not in Valorant")
 if __name__ == "__main__":
     createAndInitOverlay()
 # currently, the code does successfully overlay the damage numbers.

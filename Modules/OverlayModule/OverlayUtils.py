@@ -20,7 +20,7 @@ from PyQt6.QtWidgets import QLabel
 from PyQt6.QtCore import Qt
 
 class HealthLabel:
-    def __init__(self, parentWindow, initialValue=150, offset=0, initNow=True):
+    def __init__(self, parentWindow,agent, initialValue=150, offset=0, initNow=True):
         """
         Object that represents the health label for each agent in the top bar.
         This is used within the Agent class, and is accessed from Agent.getLabel()
@@ -36,6 +36,7 @@ class HealthLabel:
         """
         self.parentWindow = parentWindow
         self.initialValue = initialValue
+        self.agent = agent
         self.offset = offset
         if initNow:
             self.label = QLabel(parentWindow)
@@ -64,19 +65,20 @@ class HealthLabel:
         """
         print("Desired value: " + value)
         self.label.setText(str(value))
-        self.updateLabelPosition(value)
+        self.updateLabelPosition()
 
-    def updateLabelPosition(self, currentPosition):
+    def updateLabelPosition(self):
         """
         Updates the label position. Kinda an internal method but can be used outside if an update is required
-        :param currentPosition:
         :return:
         """
         print("Updating label position")
-        self.offset = currentPosition
-        self.label.setGeometry(882 + (int(currentPosition) * 52), 69, 38, 18) # apparently currentposition is a string?? TODO: look into this
-        # TODO: The offsetting makes it disappear????
-# TODO: SPEND A SESSION ON DOCUMENTATION USING PYCHARM'S DOCSTRINGS I HAVE AN EXAMPLE IN ChatModule.updateChat
+        if self.agent.currentPosition is None:
+            self.label.setGeometry(882 + (1300), 69, 38, 18) # arbitrary value, its offscreen tho
+        else:
+
+            self.label.setGeometry(882 + (int(self.agent.currentPosition) * 52), 69, 38, 18) # apparently currentposition is a string?? TODO: look into this
+
 class Agent(object):
     def __init__(self, name, baseposition, side, health : int):
         """
@@ -105,7 +107,7 @@ class Agent(object):
         :param initNow:
         :return:
         """
-        self.healthLabel = HealthLabel(parentWindow, self.health, self.baseposition, initNow)
+        self.healthLabel = HealthLabel(parentWindow,self, self.health, self.baseposition, initNow)
 
     def getLabel(self):
         """
@@ -140,7 +142,7 @@ class Agent(object):
         self.currentPosition = position
         try:
             # Should work properly, might want to check
-            self.label.healthLabel.updateLabelPosition(self.currentPosition)
+            self.healthLabel.updateLabelPosition()
         except AttributeError:
             print("Label not created yet.")
             # This is because the overlay hasnt properly been started, and can likely be ignored. COME BACK TO ME THOUGH
@@ -268,7 +270,7 @@ class ValorantAgentTracker:
         for i in positionsR:
             positionsR[i] = self.getAgent(i, team="R", screenshot=screenshot)
 
-        print(positionsL)
+        #print(positionsL)
         print(positionsR)
         return positionsL, positionsR  # This returns from the center
 
