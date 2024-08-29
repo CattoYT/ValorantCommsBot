@@ -116,7 +116,6 @@ class EnemyManager(BaseLiveManager):
 
         # Set the specified area to black
         img_np[box_coords[1]:box_coords[3], box_coords[0]:box_coords[2]] = [0, 0, 0]
-        img = Image.fromarray(img_np)
         return img
 
 
@@ -133,7 +132,7 @@ class EnemyManager(BaseLiveManager):
 
         if self.model == None:
             import ultralytics
-            modelPath = "Models/best.pt"
+            modelPath = "Models/keremberke.pt"
             self.model = ultralytics.YOLO(modelPath)
             # converts the model to engine if it isnt already
             print(modelPath[:-3] + ".engine")
@@ -143,7 +142,7 @@ class EnemyManager(BaseLiveManager):
                     self.model = ultralytics.YOLO(modelPath[:-3] + ".engine")
                 except:
                     if input("Do you want to convert this model to "
-                             "TensorRT for faster inference? (y/n): ").lower() == "y":
+                             "TensorRT for faster inference? DO NOT DO THIS IN A GAME! IT TAKES A LONG TIME! (y/n): ").lower() == "y":
 
                         self.model.export(dynamic=True, format="engine")
                         os.remove(modelPath[:-3] + ".onnx")
@@ -152,15 +151,24 @@ class EnemyManager(BaseLiveManager):
         logging.getLogger('ultralytics').setLevel(logging.WARNING) #chatgpt'd because the documentation is kinda shit
         while not self.stopEvent.is_set():
             screenshot = detectors.capture_screenshot()
-            results = self.model(self.overlayCensor(screenshot), conf=0.70, device="0")
+            overlayedSS = self.overlayCensor(screenshot)
+            results = self.model(overlayedSS, conf=0.70, device="0")
 
             detections = results[0].boxes
             class_ids = detections.cls.cpu().numpy() if detections.cls is not None else [] # thanks copilot
             detected = 0
-            for class_id in class_ids:
+
+            for i, class_id in enumerate(class_ids):
                 if class_id == 1.0: # check if the class id is actually an enemy
 
                     detected += 1
+                if self.visualize:
+                    x_min, y_min, x_max, y_max = detections.xyxy[i].cpu().numpy()
+                    # Draw bounding box on the image
+                    overlayedSS = cv2.cvtColor(overlayedSS, cv2.COLOR_RGB2BGR)
+                    cv2.rectangle(overlayedSS, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (0, 255, 0), 2)
+                    cv2.putText(overlayedSS, f'Class: {int(class_id)}', (int(x_min), int(y_min) - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
             if detected >= 1:
                 if time.time() - cooldown > 30:  # 30 seconds
