@@ -42,7 +42,7 @@ def play_audio(file_path, volume=0.9):
 
     data = data * volume
     #keyboard.press('v')
-    #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C'))
+    #sd.play(data, fs, device=find_device_id('CABLE Input (VB-Audio Virtual C')) # uncomment me and change the device name to play into the mic
     sd.play(data, fs)
     sd.wait()
     time.sleep(0.1)
