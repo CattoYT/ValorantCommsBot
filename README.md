@@ -40,7 +40,7 @@ To configure it to play into the mic, install VBCable and Voicemeeter Banana
 3. In Speaker.py, (Or MultiProcessingIsAMistake.py), uncomment the other sd.play line and the keyboard pressses.
 4. Rebind the keyboard presses to push to talk, and set the device name to CABLE Input. (already set?)
 5. If all of that didn't work, see [SociallyIneptWeeb's Documenation](https://github.com/SociallyIneptWeeb/LanguageLeapAI/blob/main/docs/AUDIO.md) and [this PR](https://github.com/SociallyIneptWeeb/LanguageLeapAI/pull/105/) because they explain it better than I could lol
-![img_1.png](img_1.png)
+![Voicemeeter.png](Voicemeeter.png)
 
 As of writing, Python 3.13 isn't out, but will be within the year. I plan on migrating quickly due to the lack of the GIL, which will significantly improve this app's performance currently.
 This is mainly to clean up the shitty multiprcessing code i've written, and will hopefully be faster when starting up different modules such as the EnemyManager. When this happens, it will definitely take a massive refactor tho lol
